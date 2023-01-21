@@ -25,4 +25,5 @@ private:
     Semaphore second_semaphore;
     NCrossroad_State current_state;
     NCrossroad_State previous_state;
+
 };

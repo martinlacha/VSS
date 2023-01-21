@@ -1,12 +1,10 @@
 #pragma once
 
-#include "../config.h"
-
 #include <cstdint>
 
 constexpr int map_height = 40;
 constexpr int map_width = 64;
-constexpr float cell_size = 10.0f;
+constexpr float cell_size = 15.0f;
 
 class Map
 {

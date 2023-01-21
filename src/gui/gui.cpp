@@ -10,7 +10,11 @@
 
 namespace gui
 {
-    Simulation simulation;
+    Configuration config;
+    Simulation simulation(config);
+
+    static ImGuiTableFlags table_flags = ImGuiTableFlags_Borders | ImGuiTableFlags_NoHostExtendX;
+
     static bool show_demo_window = true;
     static bool show_another_window = false;
 
@@ -114,31 +118,28 @@ namespace gui
     static void drawSimulation()
     {
         ImGui::Begin("Simulation grid");
-        static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_NoHostExtendX;
         int map_width = simulation.Get_Map().Get_Map_Width();
         int map_height = simulation.Get_Map().Get_Map_Height();
 
 
-        if (ImGui::BeginTable("map_grid", map_width, flags))
+        if (ImGui::BeginTable("map_grid", map_width, table_flags))
         {
             for (int i = 0; i < map_width; ++i) {
                 ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, cell_size);
             }
-            for (int row = 0; row < map_height; row++)
-            {
-                ImGui::TableNextRow(flags, cell_size);
-                for (int column = 0; column < map_width; column++)
-                {
+            for (int row = 0; row < map_height; row++) {
+                ImGui::TableNextRow(table_flags, cell_size);
+                for (int column = 0; column < map_width; column++) {
                     Map::NCell_Type cell_type = simulation.Get_Map().Get_Cell_Type(row, column);
                     ImGui::TableSetColumnIndex(column);
                     //ImGui::Text("%d%d", row + 1, column);
-                    ImGui::Text(" ");
+                    ImGui::Text("");
                     ImU32 cell_bg_color = ImGui::GetColorU32(Get_Cell_Color(cell_type));
                     ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, cell_bg_color);
                 }
             }
             ImGui::EndTable();
-            }
+        }
         ImGui::End();
         simulation.Update();
     }
@@ -148,7 +149,7 @@ namespace gui
         ImVec4 color;
         switch (cell_type) {
             case Map::NCell_Type::V:
-                color = ImVec4(0.0, 0.0, 0.0, 1.0);
+                color = ImVec4(0.0, 0.0, 1.0, 1.0);
                 break;
             case Map::NCell_Type::R:
                 color = ImVec4(0.3, 0.3, 0.3, 1.0);

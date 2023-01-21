@@ -4,18 +4,23 @@
 #include "imgui.h"
 #include "map.h"
 
+#include <vector>
+
 class Semaphore {
 public:
-    enum class NSemaphore_State {
+    enum class NSemaphore_State : uint8_t {
         BLACK,
         RED,
         GREEN
     };
+
     Semaphore(int bottom_x, int bottom_y, int top_x, int top_y, size_t count_iterations, Map& map);
-    Semaphore();
+    Semaphore() = default;
     void Change_State_To_Black();
     void Change_State_To_Red();
     void Change_State_to_Green();
+
+
 private:
     Map& map;
     NSemaphore_State current_state;

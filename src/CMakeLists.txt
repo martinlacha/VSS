@@ -25,7 +25,7 @@ add_executable(${EXECUTABLE_NAME}
     ${implot_SOURCE_DIR}/implot_demo.cpp
     ${implot_SOURCE_DIR}/implot_internal.h
     ${implot_SOURCE_DIR}/implot_items.cpp
-        simulation/vehicles/vehicle.cpp simulation/vehicles/vehicle.h simulation/map/map.h simulation/map/map.cpp simulation/config.h simulation/cell.cpp simulation/cell.h simulation/simulation.cpp simulation/simulation.h simulation/map/semaphore.cpp simulation/map/semaphore.h simulation/vehicles/motorbike.cpp simulation/vehicles/motorbike.h simulation/map/crossroad.cpp simulation/map/crossroad.h)
+        simulation/vehicles/vehicle.cpp simulation/vehicles/vehicle.h simulation/map/map.h simulation/map/map.cpp simulation/cell.cpp simulation/cell.h simulation/simulation.cpp simulation/simulation.h simulation/map/semaphore.cpp simulation/map/semaphore.h simulation/map/crossroad.cpp simulation/map/crossroad.h simulation/vehicles/path.cpp simulation/vehicles/path.h simulation/configuration.cpp simulation/configuration.h simulation/map/semaphore_waiting_place.cpp simulation/map/semaphore_waiting_place.h)
 
 target_compile_definitions(${EXECUTABLE_NAME}
     PRIVATE
