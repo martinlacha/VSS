@@ -144,25 +144,8 @@ void Simulation::Remove_Vehicles() {
         }
         vehicles.clear();
         std::copy(vehicles_temp.begin(), vehicles_temp.end(), std::back_inserter(vehicles));
+        vehicles_temp.clear();
         clear_vehicles = false;
         std::cout << "After clear: " << vehicles.size() << std::endl;
     }
-
-    /*
-    auto it = vehicles.begin();
-    while (true) {
-        if (vehicles.empty() || it == vehicles.end()) {
-            break;
-        }
-
-        Vehicle vehicle = *(it);
-        if (vehicle.Remove_Vehicle()) {
-            vehicles.erase(it);
-            it = vehicles.begin();
-            std::cout << "Remaining cars: " << vehicles.size() << std::endl;
-            continue;
-        }
-        it++;
-    }
-    */
 }
