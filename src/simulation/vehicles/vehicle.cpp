@@ -29,12 +29,12 @@ ImVec4 Vehicle::Generate_Unique_Color() {
     return {x, y, z, 1};
 }
 
-void Vehicle::Move_Vehicle() {
+bool Vehicle::Move_Vehicle() {
     if (!length_to_drive) {
         if (phase_remain) {
-            Set_New_Direction();
             --phase_remain;
             ++phase_path;
+            Set_New_Direction();
         } else if (exiting_map) {
             length_to_drive = vehicle_length;
         } else {
@@ -46,6 +46,7 @@ void Vehicle::Move_Vehicle() {
         Change_Cells_And_Map();
         length_to_drive--;
     }
+    return remove;
 }
 
 Vehicle::NVehicle_Type Vehicle::Get_Vehicle_Type(float prob_motorbike, float prob_car, float prob_van) {
@@ -205,6 +206,7 @@ void Vehicle::Change_Cells_And_Map_By_Direction(Cell next_cell) {
     }
 
     if (erase_first_cell) {
+        map.Set_Cell_Type(prev_cell.Get_X(), prev_cell.Get_Y(), Map::NCell_Type::R);
         cells.erase(cells.begin());
     }
 
@@ -216,17 +218,17 @@ void Vehicle::Change_Cells_And_Map_By_Direction(Cell next_cell) {
 
 bool Vehicle::Is_Out_Of_Map(Cell& cell) {
     size_t x = cell.Get_X(), y = cell.Get_Y();
-    if (x < 0 || x > 40) {
+    if (x < 0 || x > 39) {
         return true;
     }
-    if (y < 0 || y > 64) {
+    if (y < 0 || y > 63) {
         return true;
     }
     return false;
 }
 
 void Vehicle::Set_New_Direction() {
-    Path::NDirection direct = path.Get_Direction_By_Path_Type(path_type, phase_path);
+    Path::NDirection direct = path.Get_Direction_By_Path_Type(path_type, phase_path - 1);
 
     if (direct == Path::NDirection::UP) {
         direction = NMove_Direction::UP;
@@ -239,7 +241,12 @@ void Vehicle::Set_New_Direction() {
     } else {
         throw std::invalid_argument("Error direction");
     }
-    length_to_drive = path.Get_Length_By_Vehicle_Phase(path_type, phase_path) + vehicle_length + 2;
+    length_to_drive = path.Get_Length_By_Vehicle_Phase(path_type, phase_path);
+
+    if (!phase_remain) {
+        length_to_drive += vehicle_length;
+    }
+
 }
 
 bool Vehicle::Remove_Vehicle() {

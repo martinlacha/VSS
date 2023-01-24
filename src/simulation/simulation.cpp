@@ -13,7 +13,6 @@ Simulation::Simulation(Configuration& config) :
 }
 
 void Simulation::Update() {
-    std::cout << iteration << "Update" << std::endl;
     iteration++;
 
     Update_Semaphores();
@@ -26,6 +25,7 @@ void Simulation::Update() {
         iteration = 0;
     }
     std::this_thread::sleep_for(iteration_pause);
+
 }
 
 void Simulation::Update_Semaphores() {
@@ -36,7 +36,7 @@ void Simulation::Update_Semaphores() {
 
 void Simulation::Update_Vehicles() {
     for (auto& vehicle : vehicles) {
-        vehicle.Move_Vehicle();
+        clear_vehicles |= vehicle.Move_Vehicle();
     }
 }
 
@@ -58,7 +58,6 @@ void Simulation::Try_Create_Car()
     if (!creating_vehicle_on_top)
     {
         if (Vehicle::Start_Generate_Car(config.prob_vehicle_create_top)) {
-            config.prob_vehicle_create_top = 0.0;
             creating_vehicle_on_top = true;
             Vehicle new_vehicle = Create_New_Vehicle(Path::NVehicle_Start_Position::TOP);
             remain_vehicle_length_top = new_vehicle.Get_Vehicle_Length();
@@ -110,9 +109,16 @@ void Simulation::Try_Create_Car()
 Vehicle Simulation::Create_New_Vehicle(Path::NVehicle_Start_Position position) {
     // TODO Test Vehicle type
     //Vehicle::NVehicle_Type vehicle_type = Vehicle::Get_Vehicle_Type(config.prob_motorbike, config.prob_car, config.prob_van);
-    //Vehicle::NVehicle_Type vehicle_type = Vehicle::NVehicle_Type::MOTORBIKE;
-    //Vehicle::NVehicle_Type vehicle_type = Vehicle::NVehicle_Type::CAR;
-    Vehicle::NVehicle_Type vehicle_type = Vehicle::NVehicle_Type::VAN;
+    Vehicle::NVehicle_Type vehicle_type;
+    if (phase == 1) {
+        vehicle_type = Vehicle::NVehicle_Type::MOTORBIKE;
+    } else if (phase == 2) {
+        vehicle_type = Vehicle::NVehicle_Type::CAR;
+    } else if (phase == 3) {
+        vehicle_type = Vehicle::NVehicle_Type::VAN;
+        phase = 0;
+    }
+    phase++;
 
     //TODO TEST Path type
     //Path::NVehicle_Path path_type = path.Get_Path_Type(position, config.prob_park);
@@ -126,14 +132,37 @@ Vehicle Simulation::Create_New_Vehicle(Path::NVehicle_Start_Position position) {
 }
 
 void Simulation::Remove_Vehicles() {
-    for (auto it = vehicles.begin(); it != vehicles.end(); ++it) {
-        if (vehicles.empty()) {
+    //vehicles.erase(std::remove_if(vehicles.begin(), vehicles.end(), [](Vehicle& obj) { return obj.Remove_Vehicle(); }),vehicles.end());
+    int32_t index{};
+    if (clear_vehicles) {
+        std::cout << "Before clear: " << vehicles.size() << std::endl;
+        for (auto vehicle : vehicles) {
+            if (!vehicle.Remove_Vehicle()) {
+                vehicles_temp.insert(vehicles_temp.begin() + index, Vehicle(vehicle));
+                index++;
+            }
+        }
+        vehicles.clear();
+        std::copy(vehicles_temp.begin(), vehicles_temp.end(), std::back_inserter(vehicles));
+        clear_vehicles = false;
+        std::cout << "After clear: " << vehicles.size() << std::endl;
+    }
+
+    /*
+    auto it = vehicles.begin();
+    while (true) {
+        if (vehicles.empty() || it == vehicles.end()) {
             break;
         }
+
         Vehicle vehicle = *(it);
         if (vehicle.Remove_Vehicle()) {
-            it = vehicles.erase(it);
+            vehicles.erase(it);
+            it = vehicles.begin();
             std::cout << "Remaining cars: " << vehicles.size() << std::endl;
+            continue;
         }
+        it++;
     }
+    */
 }

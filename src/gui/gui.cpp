@@ -117,6 +117,7 @@ namespace gui
 
     static void drawSimulation()
     {
+        simulation.Update();
         ImGui::Begin("Simulation grid");
         int map_width = simulation.Get_Map().Get_Map_Width();
         int map_height = simulation.Get_Map().Get_Map_Height();
@@ -141,7 +142,6 @@ namespace gui
             ImGui::EndTable();
         }
         ImGui::End();
-        simulation.Update();
     }
 
     ImVec4 Get_Cell_Color(Map::NCell_Type cell_type)

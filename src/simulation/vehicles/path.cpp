@@ -6,7 +6,7 @@ Path::Path() {
     top_bottom_path_direction = {NDirection::DOWN};
 
     top_right_path = {{0, 1}, {36, 1}, {36, 63}};
-    top_right_path_length = {35, 62};
+    top_right_path_length = {37, 61};
     top_right_path_direction = {NDirection::DOWN, NDirection::RIGHT};
 
     top_park_path = {{0, 1}, {36, 1}, {36, 61}, {6, 61}, {6, 3}};

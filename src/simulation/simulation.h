@@ -33,6 +33,7 @@ private:
 
     // List of existing vehicles in simulation
     std::vector<Vehicle> vehicles;
+    std::vector<Vehicle> vehicles_temp;
 
     bool creating_vehicle_on_top{};
     size_t remain_vehicle_length_top{};
@@ -50,4 +51,6 @@ private:
 private:
     [[nodiscard]] Vehicle Create_New_Vehicle(Path::NVehicle_Start_Position position);
     void Remove_Vehicles();
+    bool clear_vehicles{};
+    size_t phase = 1;
 };

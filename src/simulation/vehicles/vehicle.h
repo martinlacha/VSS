@@ -40,7 +40,8 @@ public:
 
     Vehicle(NVehicle_Type type, Cell start_position, size_t path_length, bool wanna_park, Path::NVehicle_Start_Position start,
             size_t phase_count, Map& map, Path::NVehicle_Path path_type, Path& path, Semaphore_Waiting_Place& places);
-    void Move_Vehicle();
+    ~Vehicle() = default;
+    bool Move_Vehicle();
     [[nodiscard]] size_t Get_Vehicle_Length() const;
     bool Remove_Vehicle();
     static NVehicle_Type Get_Vehicle_Type(float prob_motorbike, float prob_car, float prob_van);

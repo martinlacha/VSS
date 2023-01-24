@@ -23,7 +23,6 @@ void Crossroad::Update() {
     {
         if (current_state == NCrossroad_State::FIRST || current_state == NCrossroad_State::SECOND)
         {
-            std::cout << "Semaphore: Black" << std::endl;
             next_switch = pause_iteration_count;
             previous_state = current_state;
             current_state = NCrossroad_State::NONE;
@@ -35,8 +34,6 @@ void Crossroad::Update() {
             next_switch = count_iteration_to_switch;
             if (previous_state == NCrossroad_State::FIRST)
             {
-                std::cout << "Semaphore1: G" << std::endl;
-                std::cout << "Semaphore2: R" << std::endl;
                 previous_state = current_state;
                 current_state = NCrossroad_State::SECOND;
                 first_semaphore.Change_State_To_Red();
@@ -44,8 +41,6 @@ void Crossroad::Update() {
             }
             else if (previous_state == NCrossroad_State::SECOND)
             {
-                std::cout << "Semaphore1: R" << std::endl;
-                std::cout << "Semaphore2: G" << std::endl;
                 previous_state = current_state;
                 current_state = NCrossroad_State::FIRST;
                 first_semaphore.Change_State_to_Green();
