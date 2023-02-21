@@ -14,18 +14,19 @@ public:
     size_t right_crossroad_pause_time = 3;
 
     // Time of break between iteration
-    size_t pause_milliseconds_count = 50;
+    size_t pause_milliseconds_count = 10;
 
     // Configuration of vehicles
-    float prob_vehicle_create_top = 1.0;
-    float prob_vehicle_create_bottom = 0.0;
-    float prob_vehicle_create_right = 0.0;
+    float prob_vehicle_create_top = 0.1;
+    float prob_vehicle_create_bottom = 0.1;
+    float prob_vehicle_create_right = 0.1;
 
     // Probabilities of create type vehicle
-    float prob_motorbike = 0.33;
-    float prob_car = 0.34;
-    float prob_van = 0.33;
+    float prob_motorbike = 0.2;
+    float prob_car = 0.5;
+    float prob_van = 0.3;
 
     // Probability of park
-    float prob_park = 0.0;
+    float prob_park = 0.2;
+    float next_park_try_step = 0.1;
 };

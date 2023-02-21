@@ -19,6 +19,7 @@ Vehicle::Vehicle(Vehicle::NVehicle_Type type, Cell start_cell, size_t path_lengt
             vehicle_length = 3;
             break;
     }
+    is_in_parking_zone = Will_Go_To_Park_Zone();
 }
 
 ImVec4 Vehicle::Generate_Unique_Color() {
@@ -35,10 +36,13 @@ bool Vehicle::Move_Vehicle() {
             --phase_remain;
             ++phase_path;
             Set_New_Direction();
-        } else if (exiting_map) {
+        } else if (exiting_map && !is_in_parking_zone) {
             length_to_drive = vehicle_length;
+        } else if (is_in_parking_zone) {
+            Choose_New_Path_From_Park_Zone();
+            return remove;
         } else {
-            //TODO tady je možnost že nezaparkoval a možná chce to zkusit znovu
+            std::cout << "Unknown situation" << std::endl;
         }
     }
 
@@ -164,11 +168,6 @@ void Vehicle::Change_Cells_And_Map() {
             Change_Cells_And_Map_By_Direction({head.Get_X(), head.Get_Y() + 1});
             break;
     }
-
-    for (auto& cell : cells) {
-        std::cout << cell.Get_X() << ":" << cell.Get_Y() << "-";
-    }
-    std::cout << std::endl;
 }
 
 void Vehicle::Change_Cells_And_Map_By_Direction(Cell next_cell) {
@@ -243,21 +242,61 @@ void Vehicle::Set_New_Direction() {
     }
     length_to_drive = path.Get_Length_By_Vehicle_Phase(path_type, phase_path);
 
-    if (!phase_remain) {
-        length_to_drive += vehicle_length;
+    if (is_in_parking_zone) {
+        return;
     }
 
+    if (!phase_remain && !want_to_park) {
+        length_to_drive += vehicle_length;
+    }
 }
 
 bool Vehicle::Remove_Vehicle() {
     return remove;
 }
 
-void Vehicle::Add_Vehicle_Into_Map() {
-    if (cells.empty()) {
-
-    } else  {
-
+bool Vehicle::Will_Go_To_Park_Zone() {
+    switch (path_type) {
+        case Path::NVehicle_Path::TOP_PARK:
+        case Path::NVehicle_Path::BOTTOM_PARK:
+        case Path::NVehicle_Path::RIGHT_PARK:
+            return true;
+        default:
+            return false;
     }
 }
 
+void Vehicle::Choose_New_Path_From_Park_Zone() {
+    if (want_to_park) {
+        attempt_to_park++;
+        Try_Another_Park();
+    } else {
+        path_type = path.Get_Path_Type(start_position, 0.0, true);
+        length_to_drive = 0;
+        phase_path = 0;
+        phase_remain = path.Get_Phase_Count_By_Type(path_type);
+        exiting_map = true;
+        is_in_parking_zone = false;
+    }
+}
+
+void Vehicle::Try_Another_Park() {
+    float step = 0.15;
+    float probability_another_park = (1 - (step * (float)attempt_to_park));
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distribution_generator(1, 100); // define the range
+    int r = distribution_generator(gen);
+    if (r > (int)(probability_another_park * 100)) {
+        want_to_park = false;
+        exiting_map = true;
+        is_in_parking_zone = false;
+        path_type = path.Get_Path_Type(start_position, 0.0, true);
+    } else {
+        exiting_map = false;
+        path_type = path.Get_Path_Type(start_position, 1.0, true);
+    }
+    phase_remain = path.Get_Phase_Count_By_Type(path_type);
+    length_to_drive = 0;
+    phase_path = 0;
+}

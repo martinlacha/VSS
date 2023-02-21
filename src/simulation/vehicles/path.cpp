@@ -10,7 +10,7 @@ Path::Path() {
     top_right_path_direction = {NDirection::DOWN, NDirection::RIGHT};
 
     top_park_path = {{0, 1}, {36, 1}, {36, 61}, {6, 61}, {6, 3}};
-    top_park_path_length = {35, 60, 30, 58};
+    top_park_path_length = {37, 60, 30, 58};
     top_park_path_direction = {NDirection::DOWN, NDirection::RIGHT, NDirection::UP, NDirection::LEFT};
 
     bottom_top_path = {{39, 2}, {0, 2}};
@@ -18,19 +18,19 @@ Path::Path() {
     bottom_top_path_direction = {NDirection::UP};
 
     bottom_right_path = {{39, 2}, {36, 2}, {36, 63}};
-    bottom_right_path_length = {3, 61};
+    bottom_right_path_length = {4, 61};
     bottom_right_path_direction = {NDirection::UP, NDirection::RIGHT};
 
     bottom_park_path = {{39, 2}, {36, 2}, {36, 61}, {6, 61}, {6, 3}};
-    bottom_park_path_length = {3, 59, 30, 58};
-    bottom_right_path_direction = {NDirection::UP, NDirection::RIGHT, NDirection::UP, NDirection::LEFT};
+    bottom_park_path_length = {4, 59, 30, 58};
+    bottom_park_path_direction = {NDirection::UP, NDirection::RIGHT, NDirection::UP, NDirection::LEFT};
 
     right_top_path = {{35, 63}, {35, 2}, {0, 2}};
-    right_top_path_length = {59, 35};
+    right_top_path_length = {62, 35};
     right_top_path_direction = {NDirection::LEFT, NDirection::UP};
 
     right_park_path = {{35, 63}, {35, 61}, {6, 61}, {6, 3}};
-    right_park_path_length = {2, 29, 58};
+    right_park_path_length = {3, 29, 58};
     right_park_path_direction = {NDirection::LEFT, NDirection::UP, NDirection::LEFT};
 
     park_top_path = {{6, 3}, {6, 2}, {0, 2}};
@@ -51,24 +51,37 @@ Path::Path() {
     park_park_path_direction = {NDirection::LEFT, NDirection::DOWN, NDirection::RIGHT, NDirection::UP, NDirection::LEFT};
 }
 
-Path::NVehicle_Path Path::Get_Path_Type(NVehicle_Start_Position start_position, float prob_park) {
+Path::NVehicle_Path Path::Get_Path_Type(NVehicle_Start_Position start_position, float prob_park, bool in_park_zone) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> distribution_generator(1, 100); // define the range
 
     int r = distribution_generator(gen);
     if (r <= (int)(prob_park * 100)) {
-        switch (start_position) {
-            case NVehicle_Start_Position::TOP:
-                return NVehicle_Path::TOP_PARK;
-            case NVehicle_Start_Position::BOTTOM:
-                return NVehicle_Path::BOTTOM_PARK;
-            case NVehicle_Start_Position::RIGHT:
-                return NVehicle_Path::RIGHT_PARK;
+        if (in_park_zone) {
+            return NVehicle_Path::PARK_PARK;
+        } else {
+            switch (start_position) {
+                case NVehicle_Start_Position::TOP:
+                    return NVehicle_Path::TOP_PARK;
+                case NVehicle_Start_Position::BOTTOM:
+                    return NVehicle_Path::BOTTOM_PARK;
+                case NVehicle_Start_Position::RIGHT:
+                    return NVehicle_Path::RIGHT_PARK;
+            }
         }
     }
     else {
         r = distribution_generator(gen);
+        if (in_park_zone) {
+            if (r <= 33) {
+                return NVehicle_Path::PARK_TOP;
+            } else if (r <= 66) {
+                return NVehicle_Path::PARK_BOTTOM;
+            } else {
+                return NVehicle_Path::PARK_RIGHT;
+            }
+        }
         switch (start_position) {
             case NVehicle_Start_Position::TOP:
                 if (r < 50) {

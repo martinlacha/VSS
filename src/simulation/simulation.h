@@ -23,7 +23,7 @@ private:
     Path path;
     Configuration config;
     Semaphore_Waiting_Place waiting_places;
-    size_t iteration;
+    size_t iteration{};
 
     // Configuration of crossroads and semaphores
     Crossroad top_crossroad;
@@ -52,5 +52,4 @@ private:
     [[nodiscard]] Vehicle Create_New_Vehicle(Path::NVehicle_Start_Position position);
     void Remove_Vehicles();
     bool clear_vehicles{};
-    size_t phase = 1;
 };

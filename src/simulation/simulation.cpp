@@ -13,19 +13,13 @@ Simulation::Simulation(Configuration& config) :
 }
 
 void Simulation::Update() {
-    iteration++;
-
     Update_Semaphores();
     waiting_places.Update_Stop_Cells(map);
     Update_Vehicles();
     Remove_Vehicles();
-    if (iteration == 10)
-    {
-        Try_Create_Car();
-        iteration = 0;
-    }
+    Try_Create_Car();
     std::this_thread::sleep_for(iteration_pause);
-
+    iteration++;
 }
 
 void Simulation::Update_Semaphores() {
@@ -107,22 +101,9 @@ void Simulation::Try_Create_Car()
 }
 
 Vehicle Simulation::Create_New_Vehicle(Path::NVehicle_Start_Position position) {
-    // TODO Test Vehicle type
-    //Vehicle::NVehicle_Type vehicle_type = Vehicle::Get_Vehicle_Type(config.prob_motorbike, config.prob_car, config.prob_van);
-    Vehicle::NVehicle_Type vehicle_type;
-    if (phase == 1) {
-        vehicle_type = Vehicle::NVehicle_Type::MOTORBIKE;
-    } else if (phase == 2) {
-        vehicle_type = Vehicle::NVehicle_Type::CAR;
-    } else if (phase == 3) {
-        vehicle_type = Vehicle::NVehicle_Type::VAN;
-        phase = 0;
-    }
-    phase++;
-
-    //TODO TEST Path type
-    //Path::NVehicle_Path path_type = path.Get_Path_Type(position, config.prob_park);
-    Path::NVehicle_Path path_type = Path::NVehicle_Path::TOP_BOTTOM;
+    Vehicle::NVehicle_Type vehicle_type = Vehicle::Get_Vehicle_Type(config.prob_motorbike, config.prob_car, config.prob_van);
+    Path::NVehicle_Path path_type = path.Get_Path_Type(position, config.prob_park, false);
+    //Path::NVehicle_Path path_type = Path::NVehicle_Path::RIGHT_PARK;
 
 
     const Cell start_cell = path.Get_Cell_By_Vehicle_Phase(path_type, 0);

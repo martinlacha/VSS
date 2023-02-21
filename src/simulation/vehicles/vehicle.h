@@ -68,6 +68,7 @@ private:
     bool creating;
     bool exiting_map;
     bool remove;
+    bool is_in_parking_zone;
     size_t attempt_to_park;
     Path::NVehicle_Start_Position start_position;
     Path::NVehicle_Path path_type;
@@ -82,5 +83,7 @@ private:
     void Change_Cells_And_Map_By_Direction(Cell next_cell);
     void Set_New_Direction();
     static bool Is_Out_Of_Map(Cell& cell);
-    void Add_Vehicle_Into_Map();
+    bool Will_Go_To_Park_Zone();
+    void Choose_New_Path_From_Park_Zone();
+    void Try_Another_Park();
 };
