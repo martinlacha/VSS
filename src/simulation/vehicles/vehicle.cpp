@@ -1,11 +1,15 @@
 #include "vehicle.h"
 
 Vehicle::Vehicle(Vehicle::NVehicle_Type type, Cell start_cell, size_t path_length, bool wanna_park, Path::NVehicle_Start_Position start,
-                 size_t phase_count, Map& map, Path::NVehicle_Path path_type, Path& path, Semaphore_Waiting_Place& places) :
+                 size_t phase_count, Map& map, Path::NVehicle_Path path_type, Path& path, Semaphore_Waiting_Place& places, Parking& parking_spot,
+                 size_t park_time, Parking::NParting_Place street) :
         vehicle_type(type), length_to_drive(path_length), already_parked(false), phase_path(0),
         start_cell(start_cell), attempt_to_park(0), want_to_park(wanna_park), start_position(start),
         phase_remain(phase_count), exiting_map(!wanna_park), map(map), remove(false), path_type(path_type),
-        path(path), waiting_places(places), creating(true) {
+        path(path), waiting_places(places), creating(true), in_parking_spot(false), finding_paring_spot(false),
+        is_in_parking_mode(false), parking(parking_spot), park_iterations(park_time), want_park_in_street(street),
+        try_currently_park_in_street(Parking::NParting_Place::None), current_parkig(Parking::NParting_Spot::None),
+        leave_park_spot(false) {
     color = Generate_Unique_Color();
     last_cell = path.Get_Cell_By_Vehicle_Phase(path_type, phase_remain);
     switch (type) {
@@ -42,13 +46,35 @@ bool Vehicle::Move_Vehicle() {
             Choose_New_Path_From_Park_Zone();
             return remove;
         } else {
+            //TODO vyřešit problém zde
             std::cout << "Unknown situation" << std::endl;
+            length_to_drive = 1;
         }
     }
 
-    if (Can_Vehicle_Move()) {
-        Change_Cells_And_Map();
-        length_to_drive--;
+    if (is_in_parking_mode) {
+        if (park_iterations == 0) {
+            is_in_parking_mode = false;
+            want_to_park = false;
+            already_parked = true;
+            leave_park_spot = true;
+        } else {
+            park_iterations--;
+        }
+    } else if (Can_Vehicle_Move()) {
+        if (finding_paring_spot && want_to_park) {
+            Try_To_Park();
+        }
+        if (!is_in_parking_mode) {
+            if (leave_park_spot && !Can_Leave_Park_Spot()) {
+                leave_park_spot = false;
+                return remove;
+            } else {
+                Remove_Vehicle_From_Parking_Spot();
+            }
+            Change_Cells_And_Map();
+            length_to_drive--;
+        }
     }
     return remove;
 }
@@ -101,7 +127,7 @@ bool Vehicle::Can_Vehicle_Move() {
     if (waiting_places.Stop_On_Semaphore(head)) {
         return false;
     }
-
+    Start_Parking();
     switch (direction) {
         case NMove_Direction::UP:
             if (head.Get_X() == 0) {
@@ -251,7 +277,7 @@ void Vehicle::Set_New_Direction() {
     }
 }
 
-bool Vehicle::Remove_Vehicle() {
+bool Vehicle::Remove_Vehicle() const {
     return remove;
 }
 
@@ -299,4 +325,139 @@ void Vehicle::Try_Another_Park() {
     phase_remain = path.Get_Phase_Count_By_Type(path_type);
     length_to_drive = 0;
     phase_path = 0;
+}
+
+Cell Vehicle::Get_Head_Cell() const{
+    return cells[0];
+}
+
+Parking::NParting_Place Vehicle::Get_Parking_Street() const {
+    return want_park_in_street;
+}
+
+bool Vehicle::Want_Park() const {
+    return want_to_park;
+}
+
+void Vehicle::Start_Find_Parking_Spot() noexcept {
+    finding_paring_spot = true;
+}
+
+void Vehicle::Stop_Find_Parking_Spot() noexcept {
+    finding_paring_spot = false;
+}
+
+void Vehicle::Start_Parking() {
+    if (cells.empty()) {
+        return;
+    }
+
+    Cell head = Get_Head_Cell();
+    if (parking.Is_In_Begin_First_Decision_Spot(head) && want_to_park &&
+        want_park_in_street == Parking::NParting_Place::J_STREET && !already_parked) {
+        std::cout << "Start find park in jung street" << std::endl;
+        Start_Find_Parking_Spot();
+        try_currently_park_in_street = Parking::NParting_Place::J_STREET;
+    } else if (parking.Is_In_End_First_Decision_Spot(head)) {
+        std::cout << "Stop find park in jung street" << std::endl;
+        Stop_Find_Parking_Spot();
+        try_currently_park_in_street = Parking::NParting_Place::None;
+    } else if (parking.Is_In_Begin_Second_Decision_Spot(head) && want_to_park && !already_parked) {
+        std::cout << "Start find park in smet street" << std::endl;
+        Start_Find_Parking_Spot();
+        try_currently_park_in_street = Parking::NParting_Place::S_STREET;
+    } else if (parking.Is_In_End_Second_Decision_Spot(head)) {
+        std::cout << "Stop find park in smet street" << std::endl;
+        Stop_Find_Parking_Spot();
+        try_currently_park_in_street = Parking::NParting_Place::None;
+    }
+}
+
+/**
+ * Try to park on current cell of vehicle
+ */
+void Vehicle::Try_To_Park() {
+    Cell head = Get_Head_Cell();
+    if (try_currently_park_in_street == Parking::NParting_Place::J_STREET) {
+        for (size_t i = 0; i < vehicle_length; i++) {
+            // Check if parking cell is occupied by another vehicle
+            if (map.Get_Cell_Type(head.Get_X() - i, head.Get_Y() - 1) != Map::NCell_Type::P_F) {
+                return;
+            }
+        }
+        // Set Parking spot is occupied and remove vehicle from road
+        for (size_t i = 0; i < vehicle_length; i++) {
+            map.Set_Cell_Type(head.Get_X() - i, head.Get_Y() - 1, Map::NCell_Type::P_O);
+        }
+        Remove_Vehicle_From_Road();
+        is_in_parking_mode = true;
+    } else if (try_currently_park_in_street == Parking::NParting_Place::S_STREET) {
+        if (vehicle_type != NVehicle_Type::VAN) {
+            // Check if parking cell is occupied by another vehicle
+            if (map.Get_Cell_Type(head.Get_X() - 1, head.Get_Y()) == Map::NCell_Type::P_F) {
+                // Set Parking spot is occupied and remove vehicle from road
+                for (size_t i = 0; i < vehicle_length; i++) {
+                    map.Set_Cell_Type(head.Get_X() - i, head.Get_Y(), Map::NCell_Type::P_O);
+                }
+                Remove_Vehicle_From_Road();
+                is_in_parking_mode = true;
+                return;
+            }
+        }
+
+        // Set Parking spot is occupied and remove vehicle from road
+        for (size_t i = 0; i < vehicle_length; i++) {
+            // Check if parking cell is occupied by another vehicle
+            if (map.Get_Cell_Type(head.Get_X() + 1, head.Get_Y() - i) != Map::NCell_Type::P_F) {
+                return;
+            }
+        }
+        for (size_t i = 0; i < vehicle_length; i++) {
+            map.Set_Cell_Type(head.Get_X() + 1, head.Get_Y() - i, Map::NCell_Type::P_O);
+        }
+        Remove_Vehicle_From_Road();
+        is_in_parking_mode = true;
+    } else if (try_currently_park_in_street == Parking::NParting_Place::None) {
+        std::cout << "Unknown park situation" << std::endl;
+    }
+}
+
+/**
+ * Remove vehicle from road by its cells
+ */
+void Vehicle::Remove_Vehicle_From_Road() {
+    for (size_t i = 0; i < vehicle_length; i++) {
+        Cell vehicle_cell = cells[i];
+        map.Set_Cell_Type(vehicle_cell.Get_X(), vehicle_cell.Get_Y(), Map::NCell_Type::R);
+    }
+}
+
+bool Vehicle::Can_Leave_Park_Spot() {
+    for (size_t i = 0; i < vehicle_length; i++) {
+        Cell vehicle_cell = cells[i];
+        if (map.Get_Cell_Type(vehicle_cell.Get_X(), vehicle_cell.Get_Y()) == Map::NCell_Type::V) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void Vehicle::Remove_Vehicle_From_Parking_Spot() {
+    Cell head = cells[0];
+    for (size_t i = 0; i < vehicle_length; i++) {
+        switch (current_parkig) {
+            case Parking::NParting_Spot::J_ROADSIDE_PARKING:
+                map.Set_Cell_Type(head.Get_X() - i, head.Get_Y() - 1, Map::NCell_Type::P_F);
+                continue;
+            case Parking::NParting_Spot::S_ANGLED_PARKING:
+                map.Set_Cell_Type(head.Get_X() - (i + 1), head.Get_Y(), Map::NCell_Type::P_F);
+                continue;
+            case Parking::NParting_Spot::S_ROADSIDE_PARKING:
+                map.Set_Cell_Type(head.Get_X() + 1, head.Get_Y() - i, Map::NCell_Type::P_F);
+                continue;
+            case Parking::NParting_Spot::None:
+                std::cout << "Error while removing car from parking spot." << std::endl;
+                break;
+        }
+    }
 }

@@ -17,7 +17,9 @@ void Simulation::Update() {
     waiting_places.Update_Stop_Cells(map);
     Update_Vehicles();
     Remove_Vehicles();
-    Try_Create_Car();
+    if (vehicles.empty()) {
+        Try_Create_Car();
+    }
     std::this_thread::sleep_for(iteration_pause);
     iteration++;
 }
@@ -37,6 +39,7 @@ void Simulation::Update_Vehicles() {
 void Simulation::Init()
 {
     map = Map();
+    parking = Parking();
     iteration = 0;
     iteration_pause = std::chrono::milliseconds(config.pause_milliseconds_count);
 }
@@ -56,6 +59,8 @@ void Simulation::Try_Create_Car()
             Vehicle new_vehicle = Create_New_Vehicle(Path::NVehicle_Start_Position::TOP);
             remain_vehicle_length_top = new_vehicle.Get_Vehicle_Length();
             vehicles.push_back(new_vehicle);
+            //TODO VYMAZAT RETURN
+            return;
         }
     } else {
         if (remain_vehicle_length_top) {
@@ -73,6 +78,8 @@ void Simulation::Try_Create_Car()
             Vehicle new_vehicle = Create_New_Vehicle(Path::NVehicle_Start_Position::BOTTOM);
             remain_vehicle_length_bottom = new_vehicle.Get_Vehicle_Length();
             vehicles.push_back(new_vehicle);
+            //TODO VYMAZAT RETURN
+            return;
         }
     } else {
         if (remain_vehicle_length_bottom) {
@@ -90,6 +97,8 @@ void Simulation::Try_Create_Car()
             Vehicle new_vehicle = Create_New_Vehicle(Path::NVehicle_Start_Position::RIGHT);
             remain_vehicle_length_right = new_vehicle.Get_Vehicle_Length();
             vehicles.push_back(new_vehicle);
+            //TODO VYMAZAT RETURN
+            return;
         }
     } else {
         if (remain_vehicle_length_right) {
@@ -101,19 +110,20 @@ void Simulation::Try_Create_Car()
 }
 
 Vehicle Simulation::Create_New_Vehicle(Path::NVehicle_Start_Position position) {
-    Vehicle::NVehicle_Type vehicle_type = Vehicle::Get_Vehicle_Type(config.prob_motorbike, config.prob_car, config.prob_van);
-    Path::NVehicle_Path path_type = path.Get_Path_Type(position, config.prob_park, false);
-    //Path::NVehicle_Path path_type = Path::NVehicle_Path::RIGHT_PARK;
-
+    //Vehicle::NVehicle_Type vehicle_type = Vehicle::Get_Vehicle_Type(config.prob_motorbike, config.prob_car, config.prob_van);
+    //Path::NVehicle_Path path_type = path.Get_Path_Type(position, config.prob_park, false);
+    Path::NVehicle_Path path_type = Path::NVehicle_Path::RIGHT_PARK;
+    Vehicle::NVehicle_Type vehicle_type = Vehicle::NVehicle_Type::VAN;
 
     const Cell start_cell = path.Get_Cell_By_Vehicle_Phase(path_type, 0);
     const bool wanna_park = Vehicle::Wanna_Park(config.prob_park);
+    const Parking::NParting_Place street = wanna_park ? parking.Choose_Street_To_Park(config.prob_park_in_smet, config.prob_park_in_jung) : Parking::NParting_Place::None;
+    const size_t iteration_for_park = wanna_park ? parking.Get_Iteration_For_Park(config.min_iteration_for_park, config.max_iteration_for_park) : 0;
     const size_t phases_count = path.Get_Phase_Count_By_Type(path_type);
-    return {vehicle_type, start_cell, 0, wanna_park, position, phases_count, map, path_type, path, waiting_places};
+    return {vehicle_type, start_cell, 0, wanna_park, position, phases_count, map, path_type, path, waiting_places, parking, iteration_for_park, street};
 }
 
 void Simulation::Remove_Vehicles() {
-    //vehicles.erase(std::remove_if(vehicles.begin(), vehicles.end(), [](Vehicle& obj) { return obj.Remove_Vehicle(); }),vehicles.end());
     int32_t index{};
     if (clear_vehicles) {
         std::cout << "Before clear: " << vehicles.size() << std::endl;

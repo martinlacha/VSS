@@ -31,13 +31,14 @@ FetchContent_Declare(
     GIT_TAG docking
 ) 
 
-FetchContent_Declare(
-    implot
-    GIT_REPOSITORY https://github.com/epezent/implot
-    GIT_TAG v0.14
-)
+#FetchContent_Declare(
+#    implot
+#    GIT_REPOSITORY https://github.com/epezent/implot
+#    GIT_TAG v0.14
+#)
 
-FetchContent_MakeAvailable(glew glfw imgui implot)
+# FetchContent_MakeAvailable(glew glfw imgui implot)
+FetchContent_MakeAvailable(glew glfw imgui)
 
 set_property(DIRECTORY ${glew_SOURCE_DIR} PROPERTY EXCLUDE_FROM_ALL YES)
 set_property(DIRECTORY ${glfw_SOURCE_DIR} PROPERTY EXCLUDE_FROM_ALL YES)

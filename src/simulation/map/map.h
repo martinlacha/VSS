@@ -17,16 +17,18 @@ public:
         S,              // SEMAPHORE_BLACK
         S_R,            // SEMAPHORE_RED
         S_G,            // SEMAPHORE_GREEN
-        P,              // PARKING_SPOT
+        P_F,            // PARKING_SPOT_FREE
+        P_O,            // PARKING_SPOT_OCCUPIED
         G,              // PARK_GRASS
-        W               // SIDEWALK
+        W,              // SIDEWALK
+        E               // ERROR
     };
 
     typedef NCell_Type t;
     NCell_Type* Get_Map();
-    int Get_Map_Height() const noexcept;
-    int Get_Map_Width() const noexcept;
-    NCell_Type Get_Cell_Type(size_t x, size_t y) const;
+    [[nodiscard]] int Get_Map_Height() const noexcept;
+    [[nodiscard]] int Get_Map_Width() const noexcept;
+    [[nodiscard]] NCell_Type Get_Cell_Type(size_t x, size_t y) const;
     void Set_Cell_Type(size_t x, size_t y, NCell_Type new_type);
 
 private:
@@ -66,36 +68,36 @@ private:
         },
         // 4
         {
-            t::B, t::R, t::R, t::W, t::W, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::W, t::W, t::W
+            t::B, t::R, t::R, t::W, t::W, t::W, t::W, t::W,
+            t::W, t::W, t::W, t::W, t::W, t::W, t::W, t::W,
+            t::W, t::W, t::W, t::W, t::W, t::W, t::W, t::W,
+            t::W, t::W, t::W, t::W, t::W, t::W, t::W, t::W,
+            t::W, t::W, t::W, t::W, t::W, t::W, t::W, t::W,
+            t::W, t::W, t::W, t::W, t::W, t::W, t::W, t::W,
+            t::W, t::W, t::W, t::W, t::W, t::W, t::W, t::W,
+            t::W, t::W, t::W, t::W, t::W, t::W, t::W, t::W
         },
         // 5
         {
-            t::S, t::R, t::R, t::W, t::W, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::W, t::W, t::W
+            t::S, t::R, t::R, t::W, t::W, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::W, t::W,   t::W, t::W, t::W
         },
         // 6
         {
-            t::S, t::R, t::R, t::W, t::W, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::W, t::W, t::W
+            t::S, t::R, t::R, t::W, t::W, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::W, t::W,   t::W, t::W, t::W
         },
         // 7
         {
@@ -110,14 +112,14 @@ private:
         },
         // 8
         {
-            t::B, t::R, t::R, t::S, t::S, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::P, t::P, t::P,
-            t::P, t::P, t::P, t::P, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::S, t::S, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F, t::P_F,
+            t::P_F, t::P_F, t::P_F, t::W, t::W,   t::R, t::W, t::B
         },
         // 9
         {
@@ -128,282 +130,282 @@ private:
             t::W, t::W, t::W, t::W, t::W, t::W, t::W, t::W,
             t::W, t::W, t::W, t::W, t::W, t::W, t::W, t::W,
             t::W, t::W, t::W, t::W, t::W, t::W, t::W, t::W,
-            t::W, t::W, t::W, t::W, t::P, t::R, t::W, t::B
+            t::W, t::W, t::W, t::W, t::W, t::R, t::W, t::B
         },
         // 10
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 11
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 12
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 13
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 14
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 15
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 16
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 17
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 18
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 19
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 20
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 21
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 22
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 23
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 24
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 25
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 26
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 27
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 28
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 29
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 30
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 31
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 32
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 33
         {
-            t::B, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::B, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 34
         {
-            t::S, t::R, t::R, t::W, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::B, t::B, t::B, t::B, t::B,
-            t::B, t::B, t::B, t::W, t::P, t::R, t::W, t::B
+            t::S, t::R, t::R, t::W, t::B, t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,   t::B,
+            t::B,   t::B,   t::B,   t::W, t::P_F, t::R, t::W, t::B
         },
         // 35
         {

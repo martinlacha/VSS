@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "imgui.h"
-#include "implot.h"
+// #include "implot.h"
 
 #include "gui.h"
 
@@ -102,17 +102,17 @@ namespace gui
         }
 
         ImGui::Begin("My Window");
-        if (ImPlot::BeginPlot("My Plot"))
+        /*if (ImPlot::BeginPlot("My Plot"))
         {
             ImPlot::PlotBars("My Bar Plot", &data[0], data.size());
             ImPlot::EndPlot();
-        }
+        }*/
         ImGui::End();
     }
 
     static void drawFifthWindow()
     {
-        ImPlot::ShowDemoWindow();
+        //ImPlot::ShowDemoWindow();
     }
 
     static void drawSimulation()
@@ -166,8 +166,11 @@ namespace gui
             case Map::NCell_Type::S_G:
                 color = ImVec4(0.0, 1.0, 0.0, 1.0);
                 break;
-            case Map::NCell_Type::P:
+            case Map::NCell_Type::P_F:
                 color = ImVec4(0.3, 0.5, 1.0, 1.0);
+                break;
+            case Map::NCell_Type::P_O:
+                color = ImVec4(0.3, 0.5, 0.7, 1.0);
                 break;
             case Map::NCell_Type::G:
                 color = ImVec4(0.0, 0.6, 0.0, 1.0);

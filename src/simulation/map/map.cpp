@@ -1,5 +1,7 @@
 #include "map.h"
 
+#include <iostream>
+
  Map::NCell_Type* Map::Get_Map()
  {
     NCell_Type* map_ptr = &map[0][0];
@@ -15,6 +17,10 @@ int Map::Get_Map_Width() const noexcept {
 }
 
 Map::NCell_Type Map::Get_Cell_Type(size_t x, size_t y) const {
+    if (x > 40 || y > 64) {
+        std::cout << "Error" << std::endl;
+        return NCell_Type::E;
+    }
     return map[x][y];
 }
 

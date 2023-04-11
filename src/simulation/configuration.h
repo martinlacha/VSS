@@ -27,6 +27,10 @@ public:
     float prob_van = 0.3;
 
     // Probability of park
-    float prob_park = 0.2;
+    float prob_park = 1.0;
     float next_park_try_step = 0.1;
+    float prob_park_in_smet = 0.0;
+    float prob_park_in_jung = 1.0;
+    size_t min_iteration_for_park = 10;
+    size_t max_iteration_for_park = 100;
 };

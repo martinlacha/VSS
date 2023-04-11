@@ -6,6 +6,7 @@
 #include "vehicles/path.h"
 #include "configuration.h"
 #include "map/semaphore_waiting_place.h"
+#include "map/parking_spot.h"
 
 #include <iostream>
 #include <thread>
@@ -20,6 +21,7 @@ public:
     Map& Get_Map();
 private:
     Map map;
+    Parking parking;
     Path path;
     Configuration config;
     Semaphore_Waiting_Place waiting_places;

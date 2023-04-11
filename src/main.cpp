@@ -3,8 +3,9 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
-#include "implot.h"
 #include "imgui.h"
+// #include "implot.h"
+
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
@@ -51,7 +52,7 @@ int main(int argc, char *argv[])
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImPlot::CreateContext();
+    //ImPlot::CreateContext();
 
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
@@ -149,7 +150,7 @@ int main(int argc, char *argv[])
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
-    ImPlot::DestroyContext();
+    //ImPlot::DestroyContext();
     ImGui::DestroyContext();
 
     glfwDestroyWindow(window);

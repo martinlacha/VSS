@@ -1,5 +1,7 @@
 set(EXECUTABLE_NAME ${PROJECT_NAME})
 
+# cmake -S . -B build
+
 file(GLOB_RECURSE cpp_files "./*.cpp")
 file(GLOB_RECURSE h_files "./*.h")
 file(GLOB_RECURSE hpp_files "./*.hpp")
@@ -20,11 +22,11 @@ add_executable(${EXECUTABLE_NAME}
     ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
     ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
 
-    ${implot_SOURCE_DIR}/implot.cpp
-    ${implot_SOURCE_DIR}/implot.h
-    ${implot_SOURCE_DIR}/implot_demo.cpp
-    ${implot_SOURCE_DIR}/implot_internal.h
-    ${implot_SOURCE_DIR}/implot_items.cpp
+    #${implot_SOURCE_DIR}/implot.cpp
+    #${implot_SOURCE_DIR}/implot.h
+    #${implot_SOURCE_DIR}/implot_demo.cpp
+    #${implot_SOURCE_DIR}/implot_internal.h
+    #${implot_SOURCE_DIR}/implot_items.cpp
         simulation/vehicles/vehicle.cpp simulation/vehicles/vehicle.h simulation/map/map.h simulation/map/map.cpp simulation/cell.cpp simulation/cell.h simulation/simulation.cpp simulation/simulation.h simulation/map/semaphore.cpp simulation/map/semaphore.h simulation/map/crossroad.cpp simulation/map/crossroad.h simulation/vehicles/path.cpp simulation/vehicles/path.h simulation/configuration.cpp simulation/configuration.h simulation/map/semaphore_waiting_place.cpp simulation/map/semaphore_waiting_place.h)
 
 target_compile_definitions(${EXECUTABLE_NAME}
