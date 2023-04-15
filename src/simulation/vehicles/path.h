@@ -40,7 +40,7 @@ public:
     };
 
     Path();
-    NVehicle_Path Get_Path_Type(NVehicle_Start_Position start_position, float prob_park, bool in_park_zone);
+    NVehicle_Path Get_Path_Type(NVehicle_Start_Position start_position, bool wanna_park, bool in_park_zone);
     Cell Get_Cell_By_Vehicle_Phase(NVehicle_Path type_path, size_t index);
     size_t Get_Length_By_Vehicle_Phase(NVehicle_Path type_path, size_t index);
     size_t Get_Phase_Count_By_Type(NVehicle_Path type);

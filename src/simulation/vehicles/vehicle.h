@@ -47,6 +47,7 @@ public:
     static bool Wanna_Park(float probability);
     void Start_Find_Parking_Spot() noexcept;
     void Stop_Find_Parking_Spot() noexcept;
+    [[nodiscard]] NVehicle_Type Get_Type() const noexcept;
 
     Vehicle& operator=(Vehicle other) {
 
@@ -84,7 +85,7 @@ private:
     Parking& parking;
     Parking::NParting_Place want_park_in_street;
     Parking::NParting_Place try_currently_park_in_street;
-    Parking::NParting_Spot current_parkig;
+    Parking::NParting_Spot current_parking;
     Semaphore_Waiting_Place& waiting_places;
 
     ImVec4 Generate_Unique_Color();

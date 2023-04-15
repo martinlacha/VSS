@@ -23,9 +23,8 @@ private:
     Map map;
     Parking parking;
     Path path;
-    Configuration config;
+    Configuration &config;
     Semaphore_Waiting_Place waiting_places;
-    size_t iteration{};
 
     // Configuration of crossroads and semaphores
     Crossroad top_crossroad;
@@ -47,6 +46,8 @@ private:
     size_t remain_vehicle_length_right{};
 
     void Init();
+    void Reset_Config_Params();
+    void Reset_Stats_Params();
     void Update_Semaphores();
     void Update_Vehicles();
     void Try_Create_Car();
@@ -54,4 +55,6 @@ private:
     [[nodiscard]] Vehicle Create_New_Vehicle(Path::NVehicle_Start_Position position);
     void Remove_Vehicles();
     bool clear_vehicles{};
+    void Stats_Update_Vehicle(Vehicle::NVehicle_Type vehicle_type, bool add);
+    void Update_Stats() noexcept;
 };

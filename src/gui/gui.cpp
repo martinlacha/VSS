@@ -1,10 +1,10 @@
 #include <random>
-#include <climits>
+#include <iostream>
 #include <ctime>
 #include <vector>
 
 #include "imgui.h"
-// #include "implot.h"
+#include "implot.h"
 
 #include "gui.h"
 
@@ -26,6 +26,7 @@ namespace gui
     static void drawFourthWindow();
     static void drawFifthWindow();
     static void drawSimulation();
+    static void drawPlotWindow();
 
     void Render_GUI()
     {
@@ -35,7 +36,39 @@ namespace gui
         //drawFourthWindow();
         //drawFifthWindow();
         drawSimulation();
-    }   
+        drawPlotWindow();
+    }
+
+    static void drawPlotWindow()
+    {
+        std::cout << "---------------------------------" << std::endl;
+
+        std::cout << "Iterations: " << config.iteration_array.size() << std::endl;
+        std::cout << "Vehicles: " << config.amount_of_vehicles[config.amount_of_vehicles.size() - 1] <<
+            " Size: " << config.amount_of_vehicles.size() << std::endl;
+        std::cout << "Vans: " << config.amount_of_vans[config.amount_of_vans.size() - 1] <<
+            " Size: " << config.amount_of_vans.size() << std::endl;
+        std::cout << "Cars: " << config.amount_of_cars[config.amount_of_cars.size() - 1] <<
+            " Size: " << config.amount_of_cars.size() << std::endl;
+        std::cout << "Motorbike: " << config.amount_of_motorbikes[config.amount_of_motorbikes.size() - 1] <<
+            " Size: " << config.amount_of_motorbikes.size() << std::endl;
+
+        std::cout << "---------------------------------" << std::endl;
+
+        if (ImGui::Begin("Plots"))
+        {
+            if (ImPlot::BeginPlot("Statistics:"))
+            {
+                ImPlot::PlotLine("Vehicle count", config.iteration_array.data(), config.amount_of_vehicles.data(), (int)config.iteration_array.size());
+                ImPlot::PlotLine("Vans count", config.iteration_array.data(), config.amount_of_vans.data(), (int)config.iteration_array.size());
+                ImPlot::PlotLine("Cars count", config.iteration_array.data(), config.amount_of_cars.data(), (int)config.iteration_array.size());
+                ImPlot::PlotLine("Motorbike count", config.iteration_array.data(), config.amount_of_motorbikes.data(), (int)config.iteration_array.size());
+                ImPlot::EndPlot();
+            }
+        }
+
+        ImGui::End();
+    }
 
     static void drawFirstWindow()
     {
@@ -170,7 +203,7 @@ namespace gui
                 color = ImVec4(0.3, 0.5, 1.0, 1.0);
                 break;
             case Map::NCell_Type::P_O:
-                color = ImVec4(0.3, 0.5, 0.7, 1.0);
+                color = ImVec4(0.1, 0.1, 0.9, 1.0);
                 break;
             case Map::NCell_Type::G:
                 color = ImVec4(0.0, 0.6, 0.0, 1.0);

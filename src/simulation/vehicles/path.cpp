@@ -51,13 +51,14 @@ Path::Path() {
     park_park_path_direction = {NDirection::LEFT, NDirection::DOWN, NDirection::RIGHT, NDirection::UP, NDirection::LEFT};
 }
 
-Path::NVehicle_Path Path::Get_Path_Type(NVehicle_Start_Position start_position, float prob_park, bool in_park_zone) {
+Path::NVehicle_Path Path::Get_Path_Type(NVehicle_Start_Position start_position, bool wanna_park, bool in_park_zone) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> distribution_generator(1, 100); // define the range
 
-    int r = distribution_generator(gen);
-    if (r <= (int)(prob_park * 100)) {
+    int r;
+    // Want to park
+    if (wanna_park) {
         if (in_park_zone) {
             return NVehicle_Path::PARK_PARK;
         } else {
@@ -71,6 +72,7 @@ Path::NVehicle_Path Path::Get_Path_Type(NVehicle_Start_Position start_position, 
             }
         }
     }
+    // Dont wanna park anymore
     else {
         r = distribution_generator(gen);
         if (in_park_zone) {

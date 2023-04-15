@@ -8,7 +8,7 @@ Vehicle::Vehicle(Vehicle::NVehicle_Type type, Cell start_cell, size_t path_lengt
         phase_remain(phase_count), exiting_map(!wanna_park), map(map), remove(false), path_type(path_type),
         path(path), waiting_places(places), creating(true), in_parking_spot(false), finding_paring_spot(false),
         is_in_parking_mode(false), parking(parking_spot), park_iterations(park_time), want_park_in_street(street),
-        try_currently_park_in_street(Parking::NParting_Place::None), current_parkig(Parking::NParting_Spot::None),
+        try_currently_park_in_street(Parking::NParting_Place::None), current_parking(Parking::NParting_Spot::None),
         leave_park_spot(false) {
     color = Generate_Unique_Color();
     last_cell = path.Get_Cell_By_Vehicle_Phase(path_type, phase_remain);
@@ -46,7 +46,6 @@ bool Vehicle::Move_Vehicle() {
             Choose_New_Path_From_Park_Zone();
             return remove;
         } else {
-            //TODO vyřešit problém zde
             std::cout << "Unknown situation" << std::endl;
             length_to_drive = 1;
         }
@@ -67,11 +66,13 @@ bool Vehicle::Move_Vehicle() {
         }
         if (!is_in_parking_mode) {
             if (leave_park_spot && !Can_Leave_Park_Spot()) {
+                return remove;
+            } else if (leave_park_spot && Can_Leave_Park_Spot()) {
+                Remove_Vehicle_From_Parking_Spot();
                 leave_park_spot = false;
                 return remove;
-            } else {
-                Remove_Vehicle_From_Parking_Spot();
             }
+
             Change_Cells_And_Map();
             length_to_drive--;
         }
@@ -85,7 +86,7 @@ Vehicle::NVehicle_Type Vehicle::Get_Vehicle_Type(float prob_motorbike, float pro
     std::uniform_int_distribution<> distribution_generator(1, 100); // define the range
 
     int r = distribution_generator(gen);
-    if (r <= (int)(prob_car * 100)) {
+    if (r <= (int)(prob_motorbike * 100)) {
         return NVehicle_Type::MOTORBIKE;
     }
     else if (r <= (int)((prob_motorbike + prob_car) * 100)) {
@@ -391,16 +392,18 @@ void Vehicle::Try_To_Park() {
         }
         Remove_Vehicle_From_Road();
         is_in_parking_mode = true;
+        current_parking = Parking::NParting_Spot::J_ROADSIDE_PARKING;
     } else if (try_currently_park_in_street == Parking::NParting_Place::S_STREET) {
         if (vehicle_type != NVehicle_Type::VAN) {
             // Check if parking cell is occupied by another vehicle
             if (map.Get_Cell_Type(head.Get_X() - 1, head.Get_Y()) == Map::NCell_Type::P_F) {
                 // Set Parking spot is occupied and remove vehicle from road
                 for (size_t i = 0; i < vehicle_length; i++) {
-                    map.Set_Cell_Type(head.Get_X() - i, head.Get_Y(), Map::NCell_Type::P_O);
+                    map.Set_Cell_Type(head.Get_X() - i - 1, head.Get_Y(), Map::NCell_Type::P_O);
                 }
                 Remove_Vehicle_From_Road();
                 is_in_parking_mode = true;
+                current_parking = Parking::NParting_Spot::S_ANGLED_PARKING;
                 return;
             }
         }
@@ -417,6 +420,7 @@ void Vehicle::Try_To_Park() {
         }
         Remove_Vehicle_From_Road();
         is_in_parking_mode = true;
+        current_parking = Parking::NParting_Spot::S_ROADSIDE_PARKING;
     } else if (try_currently_park_in_street == Parking::NParting_Place::None) {
         std::cout << "Unknown park situation" << std::endl;
     }
@@ -445,7 +449,7 @@ bool Vehicle::Can_Leave_Park_Spot() {
 void Vehicle::Remove_Vehicle_From_Parking_Spot() {
     Cell head = cells[0];
     for (size_t i = 0; i < vehicle_length; i++) {
-        switch (current_parkig) {
+        switch (current_parking) {
             case Parking::NParting_Spot::J_ROADSIDE_PARKING:
                 map.Set_Cell_Type(head.Get_X() - i, head.Get_Y() - 1, Map::NCell_Type::P_F);
                 continue;
@@ -460,4 +464,9 @@ void Vehicle::Remove_Vehicle_From_Parking_Spot() {
                 break;
         }
     }
+    current_parking = Parking::NParting_Spot::None;
+}
+
+Vehicle::NVehicle_Type Vehicle::Get_Type() const noexcept{
+    return vehicle_type;
 }
