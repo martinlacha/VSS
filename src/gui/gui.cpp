@@ -20,11 +20,14 @@ namespace gui
 
     static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+    /*
     static void drawFirstWindow();
     static void drawSecondWindow();
     static void drawThirdWindow();
     static void drawFourthWindow();
     static void drawFifthWindow();
+    */
+    static void drawSetup();
     static void drawSimulation();
     static void drawPlotWindow();
 
@@ -35,14 +38,108 @@ namespace gui
         //drawThirdWindow();
         //drawFourthWindow();
         //drawFifthWindow();
+        drawSetup();
         drawSimulation();
         drawPlotWindow();
+    }
+
+    static void drawSetup()
+    {
+        if (ImGui::Begin("Setup"))
+        {
+            if(ImGui::Button("Start"))
+            {
+                config.running = true;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Pause"))
+            {
+                config.running = false;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Stop"))
+            {
+                config.running = false;
+                simulation.Restart();
+            }
+
+            ImGui::NewLine();
+
+            ImGui::Text("Simulation speed: ");
+            ImGui::SameLine();
+            ImGui::SliderInt(" ", &(config.pause_milliseconds_count), 10, 1000);
+
+            ImGui::NewLine();
+
+            // ---------------------------------------------------------------------------------------
+
+            ImGui::Text("Probability vehicle direction:");
+            ImGui::Text("Top: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("  ", &(config.prob_vehicle_create_top), 0.0f, 1.0f);
+
+            ImGui::Text("Bottom: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("   ", &(config.prob_vehicle_create_bottom), 0.0f, 1.0f);
+
+            ImGui::Text("Right: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("    ", &(config.prob_vehicle_create_right), 0.0f, 1.0f);
+
+            ImGui::NewLine();
+
+            // ---------------------------------------------------------------------------------------
+
+            ImGui::Text("Probability create vehicle:");
+            ImGui::Text("Motorbike: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("     ", &(config.prob_motorbike), 0.0f, 1.0f);
+
+            ImGui::Text("Car: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("      ", &(config.prob_car), 0.0f, 1.0f);
+
+            ImGui::Text("Van: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("       ", &(config.prob_van), 0.0f, 1.0f);
+
+            ImGui::NewLine();
+
+            // ---------------------------------------------------------------------------------------
+
+            ImGui::Text("Probability parking vehicle:");
+            ImGui::Text("Probability park: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("        ", &(config.prob_park), 0.0f, 1.0f);
+
+            ImGui::Text("Park in Jungmann street: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("         ", &(config.prob_park_in_jung), 0.0f, 1.0f);
+
+            ImGui::Text("Park in Smetanova street: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("           ", &(config.prob_park_in_smet), 0.0f, 1.0f);
+
+            ImGui::NewLine();
+
+            // ---------------------------------------------------------------------------------------
+
+            ImGui::Text("Minimum park time: ");
+            ImGui::SameLine();
+            ImGui::SliderInt("            ", &(config.min_iteration_for_park), 10, 99);
+
+            ImGui::Text("Maximum park time: ");
+            ImGui::SameLine();
+            ImGui::SliderInt("             ", &(config.max_iteration_for_park), 100, 1000);
+
+        }
+
+        ImGui::End();
     }
 
     static void drawPlotWindow()
     {
         std::cout << "---------------------------------" << std::endl;
-
         std::cout << "Iterations: " << config.iteration_array.size() << std::endl;
         std::cout << "Vehicles: " << config.amount_of_vehicles[config.amount_of_vehicles.size() - 1] <<
             " Size: " << config.amount_of_vehicles.size() << std::endl;
@@ -52,7 +149,6 @@ namespace gui
             " Size: " << config.amount_of_cars.size() << std::endl;
         std::cout << "Motorbike: " << config.amount_of_motorbikes[config.amount_of_motorbikes.size() - 1] <<
             " Size: " << config.amount_of_motorbikes.size() << std::endl;
-
         std::cout << "---------------------------------" << std::endl;
 
         if (ImGui::Begin("Plots"))
@@ -85,14 +181,12 @@ namespace gui
         static float f = 0.0f;
         static int counter = 0;
 
-        ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-        ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-        ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+        ImGui::Begin("Hello, world!");  // Create a window called "Hello, world!" and append into it.
+        ImGui::Text("This is some useful text.");   // Display some text (you can use a format strings too)
+        ImGui::Checkbox("Demo Window", &show_demo_window);  // Edit bools storing our window open/close state
         ImGui::Checkbox("Another Window", &show_another_window);
-
-        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-        ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);    // Edit 1 float using a slider from 0.0f to 1.0f
+        ImGui::ColorEdit3("clear color", (float*)&clear_color);     // Edit 3 floats representing a color
 
         if (ImGui::Button("Button"))
         {                                                       // Buttons return true when clicked (most widgets return true when edited/activated)
@@ -150,7 +244,9 @@ namespace gui
 
     static void drawSimulation()
     {
-        simulation.Update();
+        if (config.running) {
+            simulation.Update();
+        }
         ImGui::Begin("Simulation grid");
         int map_width = simulation.Get_Map().Get_Map_Width();
         int map_height = simulation.Get_Map().Get_Map_Height();

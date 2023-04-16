@@ -2,20 +2,28 @@
 
 #include <iostream>
 #include <vector>
+#include <array>
 
 class Configuration {
 public:
     Configuration() = default;
+
+    // GUI configuration
+    bool running = false;
+
     // Statistics
     size_t iteration{};
     size_t van_count{};
     size_t car_count{};
     size_t motorbike_count{};
-    std::vector<size_t> iteration_array{};
-    std::vector<size_t> amount_of_vehicles{};
-    std::vector<size_t> amount_of_vans{};
-    std::vector<size_t> amount_of_cars{};
-    std::vector<size_t> amount_of_motorbikes{};
+    std::vector<size_t> iteration_array{0};
+    std::vector<size_t> amount_of_vehicles{0};
+    std::vector<size_t> amount_of_vans{0};
+    std::vector<size_t> amount_of_cars{0};
+    std::vector<size_t> amount_of_motorbikes{0};
+
+    std::array<int, 10> park_attempt_stats{0,0,0,0,0,
+                                           0,0,0,0,0,};
 
     // Configuration of crossroads and semaphores
     size_t top_crossroad_duration_time = 5;
@@ -26,7 +34,7 @@ public:
     size_t right_crossroad_pause_time = 3;
 
     // Time of break between iteration
-    size_t pause_milliseconds_count = 0;
+    int pause_milliseconds_count = 100;
 
     // Configuration of vehicles
     float prob_vehicle_create_top = 0.1;
@@ -42,6 +50,6 @@ public:
     float prob_park = 0.2;
     float prob_park_in_smet = 0.7;
     float prob_park_in_jung = 0.3;
-    size_t min_iteration_for_park = 10;
-    size_t max_iteration_for_park = 50;
+    int min_iteration_for_park = 10;
+    int max_iteration_for_park = 500;
 };

@@ -18,7 +18,7 @@ void Simulation::Update() {
     Update_Vehicles();
     Remove_Vehicles();
     Try_Create_Car();
-    std::this_thread::sleep_for(iteration_pause);
+    std::this_thread::sleep_for(std::chrono::milliseconds(config.pause_milliseconds_count));
     config.iteration++;
     Update_Stats();
 }
@@ -40,7 +40,6 @@ void Simulation::Init()
     map = Map();
     parking = Parking();
     config.iteration = 0;
-    iteration_pause = std::chrono::milliseconds(config.pause_milliseconds_count);
 }
 
 Map &Simulation::Get_Map()
@@ -120,11 +119,12 @@ Vehicle Simulation::Create_New_Vehicle(Path::NVehicle_Start_Position position) {
 void Simulation::Remove_Vehicles() {
     int32_t index{};
     if (clear_vehicles) {
-        std::cout << "Before clear: " << vehicles.size() << std::endl;
         for (auto vehicle : vehicles) {
+            // Insert int temp vector only cars which are not remove from map
             if (!vehicle.Remove_Vehicle()) {
                 vehicles_temp.insert(vehicles_temp.begin() + index, Vehicle(vehicle));
                 index++;
+            } else {
                 Stats_Update_Vehicle(vehicle.Get_Type(), false);
             }
         }
@@ -132,7 +132,6 @@ void Simulation::Remove_Vehicles() {
         std::copy(vehicles_temp.begin(), vehicles_temp.end(), std::back_inserter(vehicles));
         vehicles_temp.clear();
         clear_vehicles = false;
-        std::cout << "After clear: " << vehicles.size() << std::endl;
     }
 }
 
@@ -164,6 +163,8 @@ void Simulation::Stats_Update_Vehicle(Vehicle::NVehicle_Type vehicle_type, bool 
 }
 
 void Simulation::Reset_Config_Params() {
+    config.running = false;
+
     config.top_crossroad_duration_time = 5;
     config.top_crossroad_pause_time = 3;
     config.bottom_crossroad_duration_time = 5;
@@ -171,19 +172,21 @@ void Simulation::Reset_Config_Params() {
     config.right_crossroad_duration_time = 5;
     config.right_crossroad_pause_time = 3;
 
-    config.pause_milliseconds_count = 10;
+    config.pause_milliseconds_count = 100;
 
     config.prob_vehicle_create_top = 0.1;
     config.prob_vehicle_create_bottom = 0.1;
     config.prob_vehicle_create_right = 0.1;
+
     config.prob_motorbike = 0.2;
-    config.prob_car = 0.5;
-    config.prob_van = 0.3;
-    config.prob_park = 1.0;
-    config.prob_park_in_smet = 0.0;
-    config.prob_park_in_jung = 1.0;
+    config.prob_car = 0.65;
+    config.prob_van = 0.15;
+
+    config.prob_park = 0.2;
+    config.prob_park_in_smet = 0.7;
+    config.prob_park_in_jung = 0.3;
     config.min_iteration_for_park = 10;
-    config.max_iteration_for_park = 100;
+    config.max_iteration_for_park = 500;
 }
 
 void Simulation::Reset_Stats_Params() {
@@ -196,6 +199,12 @@ void Simulation::Reset_Stats_Params() {
     config.amount_of_vans.clear();
     config.amount_of_cars.clear();
     config.amount_of_motorbikes.clear();
+
+    config.park_attempt_stats = {0,0,0,0,0,
+                                 0,0,0,0,0};
+
+    vehicles.clear();
+
 }
 
 void Simulation::Update_Stats() noexcept {
@@ -210,4 +219,10 @@ void Simulation::Update_Stats() noexcept {
         config.motorbike_count > 1000) {
         std::cout << "" << std::endl;
     }
+}
+
+void Simulation::Restart() {
+    map = Map();
+    Reset_Config_Params();
+    Reset_Stats_Params();
 }

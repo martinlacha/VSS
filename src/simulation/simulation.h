@@ -19,6 +19,9 @@ public:
     Simulation(Configuration& config);
     void Update();
     Map& Get_Map();
+
+    void Restart();
+
 private:
     Map map;
     Parking parking;
@@ -30,7 +33,6 @@ private:
     Crossroad top_crossroad;
     Crossroad bottom_crossroad;
     Crossroad right_crossroad;
-    std::chrono::milliseconds iteration_pause;
 
     // List of existing vehicles in simulation
     std::vector<Vehicle> vehicles;
