@@ -57,7 +57,7 @@ void Simulation::Try_Create_Car()
             Vehicle new_vehicle = Create_New_Vehicle(Path::NVehicle_Start_Position::TOP);
             remain_vehicle_length_top = new_vehicle.Get_Vehicle_Length();
             vehicles.push_back(new_vehicle);
-            Stats_Update_Vehicle(new_vehicle.Get_Type(), true);
+            Stats_Update_Vehicle(new_vehicle, true);
         }
     } else {
         if (remain_vehicle_length_top) {
@@ -75,7 +75,7 @@ void Simulation::Try_Create_Car()
             Vehicle new_vehicle = Create_New_Vehicle(Path::NVehicle_Start_Position::BOTTOM);
             remain_vehicle_length_bottom = new_vehicle.Get_Vehicle_Length();
             vehicles.push_back(new_vehicle);
-            Stats_Update_Vehicle(new_vehicle.Get_Type(), true);
+            Stats_Update_Vehicle(new_vehicle, true);
         }
     } else {
         if (remain_vehicle_length_bottom) {
@@ -93,7 +93,7 @@ void Simulation::Try_Create_Car()
             Vehicle new_vehicle = Create_New_Vehicle(Path::NVehicle_Start_Position::RIGHT);
             remain_vehicle_length_right = new_vehicle.Get_Vehicle_Length();
             vehicles.push_back(new_vehicle);
-            Stats_Update_Vehicle(new_vehicle.Get_Type(), true);
+            Stats_Update_Vehicle(new_vehicle, true);
         }
     } else {
         if (remain_vehicle_length_right) {
@@ -125,7 +125,7 @@ void Simulation::Remove_Vehicles() {
                 vehicles_temp.insert(vehicles_temp.begin() + index, Vehicle(vehicle));
                 index++;
             } else {
-                Stats_Update_Vehicle(vehicle.Get_Type(), false);
+                Stats_Update_Vehicle(vehicle, false);
             }
         }
         vehicles.clear();
@@ -136,18 +136,51 @@ void Simulation::Remove_Vehicles() {
 }
 
 // Update stats of vehicle counts
-void Simulation::Stats_Update_Vehicle(Vehicle::NVehicle_Type vehicle_type, bool add) {
+void Simulation::Stats_Update_Vehicle(Vehicle &vehicle, bool add) {
+    Vehicle::NVehicle_Type vehicle_type = vehicle.Get_Type();
+    bool successfully_parked = vehicle.Want_Park() && vehicle.Vehicle_Parked();
+    bool cant_parked = vehicle.Want_Park() && !vehicle.Vehicle_Parked();
+
     switch (vehicle_type) {
         case Vehicle::NVehicle_Type::VAN:
             config.van_count = add ? (config.van_count + 1) : (config.van_count - 1);
-
+            if (vehicle.Remove_Vehicle()) {
+                if (successfully_parked) {
+                    config.vans_parked++;
+                    config.vehicle_parked++;
+                    config.park_attempt_stats[vehicle.Get_Attempt_To_Park()];
+                } else if (cant_parked) {
+                    config.vans_not_parked++;
+                    config.vehicle_not_parked++;
+                }
+            }
             return;
         case Vehicle::NVehicle_Type::CAR:
             config.car_count = add ? (config.car_count + 1) : config.car_count - 1;
+            if (vehicle.Remove_Vehicle()) {
+                if (successfully_parked) {
+                    config.cars_parked++;
+                    config.vehicle_parked++;
+                    config.park_attempt_stats[vehicle.Get_Attempt_To_Park()];
+                } else if (cant_parked) {
+                    config.cars_not_parked++;
+                    config.vehicle_not_parked++;
+                }
+            }
             return;
         case Vehicle::NVehicle_Type::MOTORBIKE:
             config.motorbike_count = add ? (config.motorbike_count + 1) : (config.motorbike_count - 1);
-            return;
+            if (vehicle.Remove_Vehicle()) {
+                if (successfully_parked) {
+                    config.motorbike_parked++;
+                    config.vehicle_parked++;
+                    config.park_attempt_stats[vehicle.Get_Attempt_To_Park()];
+                } else if (cant_parked) {
+                    config.motorbike_not_parked++;
+                    config.vehicle_not_parked++;
+                }
+            }
+        return;
     }
 }
 

@@ -4,7 +4,7 @@ Vehicle::Vehicle(Vehicle::NVehicle_Type type, Cell start_cell, size_t path_lengt
                  size_t phase_count, Map& map, Path::NVehicle_Path path_type, Path& path, Semaphore_Waiting_Place& places, Parking& parking_spot,
                  size_t park_time, Parking::NParting_Place street) :
         vehicle_type(type), length_to_drive(path_length), already_parked(false), phase_path(0),
-        start_cell(start_cell), attempt_to_park(0), want_to_park(wanna_park), start_position(start),
+        start_cell(start_cell), attempt_to_park(0), want_to_park(wanna_park), wanna_park(wanna_park), start_position(start),
         phase_remain(phase_count), exiting_map(!wanna_park), map(map), remove(false), path_type(path_type),
         path(path), waiting_places(places), creating(true), in_parking_spot(false), finding_paring_spot(false),
         is_in_parking_mode(false), parking(parking_spot), park_iterations(park_time), want_park_in_street(street),
@@ -336,8 +336,8 @@ Parking::NParting_Place Vehicle::Get_Parking_Street() const {
     return want_park_in_street;
 }
 
-bool Vehicle::Want_Park() const {
-    return want_to_park;
+bool Vehicle::Want_Park() const noexcept {
+    return wanna_park;
 }
 
 void Vehicle::Start_Find_Parking_Spot() noexcept {
@@ -356,19 +356,15 @@ void Vehicle::Start_Parking() {
     Cell head = Get_Head_Cell();
     if (parking.Is_In_Begin_First_Decision_Spot(head) && want_to_park &&
         want_park_in_street == Parking::NParting_Place::J_STREET && !already_parked) {
-        std::cout << "Start find park in jung street" << std::endl;
         Start_Find_Parking_Spot();
         try_currently_park_in_street = Parking::NParting_Place::J_STREET;
     } else if (parking.Is_In_End_First_Decision_Spot(head)) {
-        std::cout << "Stop find park in jung street" << std::endl;
         Stop_Find_Parking_Spot();
         try_currently_park_in_street = Parking::NParting_Place::None;
     } else if (parking.Is_In_Begin_Second_Decision_Spot(head) && want_to_park && !already_parked) {
-        std::cout << "Start find park in smet street" << std::endl;
         Start_Find_Parking_Spot();
         try_currently_park_in_street = Parking::NParting_Place::S_STREET;
     } else if (parking.Is_In_End_Second_Decision_Spot(head)) {
-        std::cout << "Stop find park in smet street" << std::endl;
         Stop_Find_Parking_Spot();
         try_currently_park_in_street = Parking::NParting_Place::None;
     }
@@ -469,4 +465,16 @@ void Vehicle::Remove_Vehicle_From_Parking_Spot() {
 
 Vehicle::NVehicle_Type Vehicle::Get_Type() const noexcept{
     return vehicle_type;
+}
+
+bool Vehicle::Vehicle_Parked() const noexcept {
+    return already_parked;
+}
+
+bool Vehicle::Vehicle_Wanna_Park() const noexcept{
+    return want_to_park;
+}
+
+size_t Vehicle::Get_Attempt_To_Park() const noexcept {
+    return attempt_to_park;
 }

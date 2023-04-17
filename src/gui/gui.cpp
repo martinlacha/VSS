@@ -141,18 +141,6 @@ namespace gui
 
     static void drawPlotWindow()
     {
-        std::cout << "---------------------------------" << std::endl;
-        std::cout << "Iterations: " << config.iteration_array.size() << std::endl;
-        std::cout << "Vehicles: " << config.amount_of_vehicles[config.amount_of_vehicles.size() - 1] <<
-            " Size: " << config.amount_of_vehicles.size() << std::endl;
-        std::cout << "Vans: " << config.amount_of_vans[config.amount_of_vans.size() - 1] <<
-            " Size: " << config.amount_of_vans.size() << std::endl;
-        std::cout << "Cars: " << config.amount_of_cars[config.amount_of_cars.size() - 1] <<
-            " Size: " << config.amount_of_cars.size() << std::endl;
-        std::cout << "Motorbike: " << config.amount_of_motorbikes[config.amount_of_motorbikes.size() - 1] <<
-            " Size: " << config.amount_of_motorbikes.size() << std::endl;
-        std::cout << "---------------------------------" << std::endl;
-
         if (ImGui::Begin("Plots"))
         {
             if (ImPlot::BeginPlot("Statistics:"))
@@ -170,77 +158,30 @@ namespace gui
 
     static void drawStats()
     {
-        if (ImGui::Begin("Setup"))
-        {
-            ImGui::Text("Vehicle type parked succesfully:");
-            ImGui::SameLine();
-            ImGui::Text("Vans: " + );
+        if (ImGui::Begin("Stats")) {
+            ImGui::Text("Vehicle type parked succesfully: %d", config.vehicle_parked);
+            ImGui::Text("Vans parked: %d", config.vans_parked);
+            ImGui::Text("Cars parked: %d", config.cars_parked);
+            ImGui::Text("Motorbikes parked: %d", config.motorbike_parked);
 
+            ImGui::Text("Vehicle park attempts:");
+            ImGui::Text("1. attempt: %d", config.park_attempt_stats[0]);
+            ImGui::Text("2. attempt: %d", config.park_attempt_stats[1]);
+            ImGui::Text("3. attempt: %d", config.park_attempt_stats[2]);
+            ImGui::Text("4. attempt: %d", config.park_attempt_stats[3]);
+            ImGui::Text("5. attempt: %d", config.park_attempt_stats[4]);
+            ImGui::Text("6. attempt: %d", config.park_attempt_stats[5]);
+            ImGui::Text("7. attempt: %d", config.park_attempt_stats[6]);
+            ImGui::Text("8. attempt: %d", config.park_attempt_stats[7]);
+            ImGui::Text("9. attempt: %d", config.park_attempt_stats[8]);
+            ImGui::Text("10. attempt: %d", config.park_attempt_stats[9]);
+
+            ImGui::Text("Vehicle type cant parked: %d", config.vehicle_not_parked);
+            ImGui::Text("Vans: %d", config.vans_not_parked);
+            ImGui::Text("Cars: %d", config.cars_not_parked);
+            ImGui::Text("Motorbikes: %d", config.motorbike_not_parked);
             ImGui::NewLine();
-
-            // ---------------------------------------------------------------------------------------
-
-            ImGui::Text("Probability vehicle direction:");
-            ImGui::Text("Top: ");
-            ImGui::SameLine();
-            ImGui::SliderFloat("  ", &(config.prob_vehicle_create_top), 0.0f, 1.0f);
-
-            ImGui::Text("Bottom: ");
-            ImGui::SameLine();
-            ImGui::SliderFloat("   ", &(config.prob_vehicle_create_bottom), 0.0f, 1.0f);
-
-            ImGui::Text("Right: ");
-            ImGui::SameLine();
-            ImGui::SliderFloat("    ", &(config.prob_vehicle_create_right), 0.0f, 1.0f);
-
-            ImGui::NewLine();
-
-            // ---------------------------------------------------------------------------------------
-
-            ImGui::Text("Probability create vehicle:");
-            ImGui::Text("Motorbike: ");
-            ImGui::SameLine();
-            ImGui::SliderFloat("     ", &(config.prob_motorbike), 0.0f, 1.0f);
-
-            ImGui::Text("Car: ");
-            ImGui::SameLine();
-            ImGui::SliderFloat("      ", &(config.prob_car), 0.0f, 1.0f);
-
-            ImGui::Text("Van: ");
-            ImGui::SameLine();
-            ImGui::SliderFloat("       ", &(config.prob_van), 0.0f, 1.0f);
-
-            ImGui::NewLine();
-
-            // ---------------------------------------------------------------------------------------
-
-            ImGui::Text("Probability parking vehicle:");
-            ImGui::Text("Probability park: ");
-            ImGui::SameLine();
-            ImGui::SliderFloat("        ", &(config.prob_park), 0.0f, 1.0f);
-
-            ImGui::Text("Park in Jungmann street: ");
-            ImGui::SameLine();
-            ImGui::SliderFloat("         ", &(config.prob_park_in_jung), 0.0f, 1.0f);
-
-            ImGui::Text("Park in Smetanova street: ");
-            ImGui::SameLine();
-            ImGui::SliderFloat("           ", &(config.prob_park_in_smet), 0.0f, 1.0f);
-
-            ImGui::NewLine();
-
-            // ---------------------------------------------------------------------------------------
-
-            ImGui::Text("Minimum park time: ");
-            ImGui::SameLine();
-            ImGui::SliderInt("            ", &(config.min_iteration_for_park), 10, 99);
-
-            ImGui::Text("Maximum park time: ");
-            ImGui::SameLine();
-            ImGui::SliderInt("             ", &(config.max_iteration_for_park), 100, 1000);
-
         }
-
         ImGui::End();
     }
 /*

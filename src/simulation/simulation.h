@@ -57,6 +57,6 @@ private:
     [[nodiscard]] Vehicle Create_New_Vehicle(Path::NVehicle_Start_Position position);
     void Remove_Vehicles();
     bool clear_vehicles{};
-    void Stats_Update_Vehicle(Vehicle::NVehicle_Type vehicle_type, bool add);
+    void Stats_Update_Vehicle(Vehicle &vehicle, bool add);
     void Update_Stats() noexcept;
 };

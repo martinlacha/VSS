@@ -40,7 +40,7 @@ public:
     [[nodiscard]] size_t Get_Vehicle_Length() const;
     [[nodiscard]] Cell Get_Head_Cell() const;
     [[nodiscard]] Parking::NParting_Place Get_Parking_Street() const;
-    [[nodiscard]] bool Want_Park() const;
+    [[nodiscard]] bool Want_Park() const noexcept;
     [[nodiscard]] bool Remove_Vehicle() const;
     static NVehicle_Type Get_Vehicle_Type(float prob_motorbike, float prob_car, float prob_van);
     static bool Start_Generate_Car(float probability);
@@ -48,7 +48,9 @@ public:
     void Start_Find_Parking_Spot() noexcept;
     void Stop_Find_Parking_Spot() noexcept;
     [[nodiscard]] NVehicle_Type Get_Type() const noexcept;
-
+    [[nodiscard]] bool Vehicle_Wanna_Park() const noexcept;
+    [[nodiscard]] bool Vehicle_Parked() const noexcept;
+    [[nodiscard]] size_t Get_Attempt_To_Park() const noexcept;
     Vehicle& operator=(Vehicle other) {
 
         return *this;
@@ -66,6 +68,7 @@ private:
     size_t phase_remain;
     //Parking
     bool want_to_park;
+    bool wanna_park;
     bool already_parked;
     bool is_in_parking_mode;
     bool creating;
