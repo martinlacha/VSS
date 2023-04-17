@@ -24,6 +24,15 @@ public:
 
     std::array<int, 10> park_attempt_stats{0,0,0,0,0,
                                            0,0,0,0,0,};
+    int vehicle_parked{};
+    int vans_parked{};
+    int cars_parked{};
+    int motorbike_parked{};
+
+    int vehicle_not_parked{};
+    int vans_not_parked{};
+    int cars_not_parked{};
+    int motorbike_not_parked{};
 
     // Configuration of crossroads and semaphores
     size_t top_crossroad_duration_time = 5;

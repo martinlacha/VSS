@@ -30,6 +30,7 @@ namespace gui
     static void drawSetup();
     static void drawSimulation();
     static void drawPlotWindow();
+    static void drawStats();
 
     void Render_GUI()
     {
@@ -39,6 +40,7 @@ namespace gui
         //drawFourthWindow();
         //drawFifthWindow();
         drawSetup();
+        drawStats();
         drawSimulation();
         drawPlotWindow();
     }
@@ -166,6 +168,82 @@ namespace gui
         ImGui::End();
     }
 
+    static void drawStats()
+    {
+        if (ImGui::Begin("Setup"))
+        {
+            ImGui::Text("Vehicle type parked succesfully:");
+            ImGui::SameLine();
+            ImGui::Text("Vans: " + );
+
+            ImGui::NewLine();
+
+            // ---------------------------------------------------------------------------------------
+
+            ImGui::Text("Probability vehicle direction:");
+            ImGui::Text("Top: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("  ", &(config.prob_vehicle_create_top), 0.0f, 1.0f);
+
+            ImGui::Text("Bottom: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("   ", &(config.prob_vehicle_create_bottom), 0.0f, 1.0f);
+
+            ImGui::Text("Right: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("    ", &(config.prob_vehicle_create_right), 0.0f, 1.0f);
+
+            ImGui::NewLine();
+
+            // ---------------------------------------------------------------------------------------
+
+            ImGui::Text("Probability create vehicle:");
+            ImGui::Text("Motorbike: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("     ", &(config.prob_motorbike), 0.0f, 1.0f);
+
+            ImGui::Text("Car: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("      ", &(config.prob_car), 0.0f, 1.0f);
+
+            ImGui::Text("Van: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("       ", &(config.prob_van), 0.0f, 1.0f);
+
+            ImGui::NewLine();
+
+            // ---------------------------------------------------------------------------------------
+
+            ImGui::Text("Probability parking vehicle:");
+            ImGui::Text("Probability park: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("        ", &(config.prob_park), 0.0f, 1.0f);
+
+            ImGui::Text("Park in Jungmann street: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("         ", &(config.prob_park_in_jung), 0.0f, 1.0f);
+
+            ImGui::Text("Park in Smetanova street: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("           ", &(config.prob_park_in_smet), 0.0f, 1.0f);
+
+            ImGui::NewLine();
+
+            // ---------------------------------------------------------------------------------------
+
+            ImGui::Text("Minimum park time: ");
+            ImGui::SameLine();
+            ImGui::SliderInt("            ", &(config.min_iteration_for_park), 10, 99);
+
+            ImGui::Text("Maximum park time: ");
+            ImGui::SameLine();
+            ImGui::SliderInt("             ", &(config.max_iteration_for_park), 100, 1000);
+
+        }
+
+        ImGui::End();
+    }
+/*
     static void drawFirstWindow()
     {
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
@@ -228,12 +306,12 @@ namespace gui
             data.emplace_back(distribution(randomEngine));
         }
 
-        ImGui::Begin("My Window");
-        /*if (ImPlot::BeginPlot("My Plot"))
-        {
-            ImPlot::PlotBars("My Bar Plot", &data[0], data.size());
-            ImPlot::EndPlot();
-        }*/
+        //ImGui::Begin("My Window");
+        //if (ImPlot::BeginPlot("My Plot"))
+        //{
+        //    ImPlot::PlotBars("My Bar Plot", &data[0], data.size());
+        //    ImPlot::EndPlot();
+        //}
         ImGui::End();
     }
 
@@ -241,7 +319,7 @@ namespace gui
     {
         //ImPlot::ShowDemoWindow();
     }
-
+    */
     static void drawSimulation()
     {
         if (config.running) {

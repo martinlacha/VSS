@@ -139,24 +139,13 @@ void Simulation::Remove_Vehicles() {
 void Simulation::Stats_Update_Vehicle(Vehicle::NVehicle_Type vehicle_type, bool add) {
     switch (vehicle_type) {
         case Vehicle::NVehicle_Type::VAN:
-            if (!config.van_count && !add) {
-                std::cout << "Error vans count sub." << std::endl;
-                return;
-            }
             config.van_count = add ? (config.van_count + 1) : (config.van_count - 1);
+
             return;
         case Vehicle::NVehicle_Type::CAR:
-            if (!config.car_count && !add) {
-                std::cout << "Error cars count sub." << std::endl;
-                return;
-            }
             config.car_count = add ? (config.car_count + 1) : config.car_count - 1;
             return;
         case Vehicle::NVehicle_Type::MOTORBIKE:
-            if (!config.motorbike_count && !add) {
-                std::cout << "Error motorbike count sub." << std::endl;
-                return;
-            }
             config.motorbike_count = add ? (config.motorbike_count + 1) : (config.motorbike_count - 1);
             return;
     }
@@ -202,9 +191,17 @@ void Simulation::Reset_Stats_Params() {
 
     config.park_attempt_stats = {0,0,0,0,0,
                                  0,0,0,0,0};
+    config.vehicle_parked = 0;
+    config.vans_parked = 0;
+    config.cars_parked = 0;
+    config.motorbike_parked = 0;
+
+    config.vehicle_not_parked = 0;
+    config.vans_not_parked = 0;
+    config.cars_not_parked = 0;
+    config.motorbike_not_parked = 0;
 
     vehicles.clear();
-
 }
 
 void Simulation::Update_Stats() noexcept {
@@ -213,12 +210,6 @@ void Simulation::Update_Stats() noexcept {
     config.amount_of_cars.push_back(config.car_count);
     config.amount_of_motorbikes.push_back(config.motorbike_count);
     config.iteration_array.push_back(config.iteration);
-
-    if (config.car_count > 1000 ||
-        config.van_count > 1000 ||
-        config.motorbike_count > 1000) {
-        std::cout << "" << std::endl;
-    }
 }
 
 void Simulation::Restart() {
