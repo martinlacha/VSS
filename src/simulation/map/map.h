@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstddef>
 
 constexpr int map_height = 40;
 constexpr int map_width = 64;
