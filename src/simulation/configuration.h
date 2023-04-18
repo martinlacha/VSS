@@ -16,11 +16,11 @@ public:
     size_t van_count{};
     size_t car_count{};
     size_t motorbike_count{};
-    std::vector<size_t> iteration_array{0};
-    std::vector<size_t> amount_of_vehicles{0};
-    std::vector<size_t> amount_of_vans{0};
-    std::vector<size_t> amount_of_cars{0};
-    std::vector<size_t> amount_of_motorbikes{0};
+    std::vector<std::uint32_t> iteration_array{0};
+    std::vector<std::uint32_t> amount_of_vehicles{0};
+    std::vector<std::uint32_t> amount_of_vans{0};
+    std::vector<std::uint32_t> amount_of_cars{0};
+    std::vector<std::uint32_t> amount_of_motorbikes{0};
 
     std::array<int, 10> park_attempt_stats{0,0,0,0,0,
                                            0,0,0,0,0,};

@@ -1,8 +1,3 @@
-#include <random>
-#include <iostream>
-#include <ctime>
-#include <vector>
-
 #include "imgui.h"
 #include "implot.h"
 
