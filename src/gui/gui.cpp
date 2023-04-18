@@ -67,7 +67,7 @@ namespace gui
 
             ImGui::NewLine();
 
-            ImGui::Text("Simulation speed: ");
+            ImGui::Text("Iteration time gap(ms): ");
             ImGui::SameLine();
             ImGui::SliderInt(" ", &(config.pause_milliseconds_count), 10, 1000);
 
