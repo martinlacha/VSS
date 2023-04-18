@@ -154,6 +154,12 @@ namespace gui
     static void drawStats()
     {
         if (ImGui::Begin("Stats")) {
+            ImGui::Text("Current amount of vehicles: ");
+            ImGui::Text("Vans: %d", (std::uint32_t)config.van_count);
+            ImGui::Text("Cars: %d", (std::uint32_t)config.car_count);
+            ImGui::Text("Motorbikes: %d", (std::uint32_t)config.motorbike_count);
+            ImGui::NewLine();
+
             ImGui::Text("Vehicle type parked succesfully: %d", config.vehicle_parked);
             ImGui::Text("Vans parked: %d", config.vans_parked);
             ImGui::Text("Cars parked: %d", config.cars_parked);
