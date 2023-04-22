@@ -19,8 +19,26 @@ public:
     Simulation(Configuration& config);
     void Update();
     Map& Get_Map();
-
     void Restart();
+
+    Simulation& operator=(const Simulation &rhs) {
+        this->map = rhs.map;
+        this->vehicles.clear();
+        for (const auto& vehicle : rhs.vehicles) {
+            this->vehicles.emplace_back(Vehicle(vehicle));
+        }
+        this->path = rhs.path;
+        this->parking = rhs.parking;
+        this->config = rhs.config;
+        this->clear_vehicles = rhs.clear_vehicles;
+        this->remain_vehicle_length_top = rhs.remain_vehicle_length_right;
+        this->remain_vehicle_length_bottom = rhs.remain_vehicle_length_bottom;
+        this->remain_vehicle_length_right = rhs.remain_vehicle_length_right;
+        this->creating_vehicle_on_top = rhs.creating_vehicle_on_top;
+        this->creating_vehicle_on_bottom = rhs.creating_vehicle_on_bottom;
+        this->creating_vehicle_on_right = rhs.creating_vehicle_on_right;
+        return *this;
+    };
 
 private:
     Map map;

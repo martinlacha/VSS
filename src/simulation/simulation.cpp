@@ -186,6 +186,7 @@ void Simulation::Stats_Update_Vehicle(Vehicle &vehicle, bool add) {
 
 void Simulation::Reset_Config_Params() {
     config.running = false;
+    config.park_places_saved = false;
 
     config.top_crossroad_duration_time = 5;
     config.top_crossroad_pause_time = 3;

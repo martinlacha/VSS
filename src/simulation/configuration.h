@@ -10,6 +10,7 @@ public:
 
     // GUI configuration
     bool running = false;
+    bool park_places_saved = false;
 
     // Statistics
     size_t iteration{};
@@ -45,6 +46,9 @@ public:
     // Time of break between iteration
     int pause_milliseconds_count = 100;
 
+    // Intensity of amount of vehicles per time
+    float intensity_of_traffic = 0.2;
+
     // Configuration of vehicles
     float prob_vehicle_create_top = 0.1;
     float prob_vehicle_create_bottom = 0.1;
@@ -56,6 +60,7 @@ public:
     float prob_van = 0.15;
 
     // Probability of park
+    float percentage_of_occupied_parking_spots = 0.0;
     float prob_park = 0.2;
     float prob_park_in_smet = 0.7;
     float prob_park_in_jung = 0.3;

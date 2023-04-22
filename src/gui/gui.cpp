@@ -7,6 +7,7 @@ namespace gui
 {
     Configuration config;
     Simulation simulation(config);
+    Simulation saved_simulation(config);
 
     static ImGuiTableFlags table_flags = ImGuiTableFlags_Borders | ImGuiTableFlags_NoHostExtendX;
 
@@ -70,6 +71,10 @@ namespace gui
 
             // ---------------------------------------------------------------------------------------
 
+            ImGui::Text("Intensity of traffic per time:");
+            ImGui::SameLine();
+            ImGui::SliderFloat("              ", &(config.intensity_of_traffic), 0.0f, 1.0f);
+
             ImGui::Text("Probability vehicle direction:");
             ImGui::Text("Top: ");
             ImGui::SameLine();
@@ -105,6 +110,23 @@ namespace gui
             // ---------------------------------------------------------------------------------------
 
             ImGui::Text("Probability parking vehicle:");
+
+            if (ImGui::Button("Generate vehicles in park places")) {
+                //TODO vygenerovat parkoviště podle intenzity
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Save") && !config.running) {
+                config.park_places_saved = true;
+                saved_simulation = simulation;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Load") && config.park_places_saved && !config.running) {
+                simulation = saved_simulation;
+            }
+            ImGui::Text("Percentage of occupied parking spots: ");
+            ImGui::SameLine();
+            ImGui::SliderFloat("               ", &(config.percentage_of_occupied_parking_spots), 0.0f, 1.0f);
+
             ImGui::Text("Probability park: ");
             ImGui::SameLine();
             ImGui::SliderFloat("        ", &(config.prob_park), 0.0f, 1.0f);

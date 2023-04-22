@@ -34,8 +34,4 @@ private:
     Cell jung_end_parking_cell = {8, 61};
     Cell smet_begin_parking_cell = {6, 58};
     Cell smet_end_parking_cell = {6, 4};
-
-    //std::array<std::pair<int, bool>, 24> jung_street_park_map;
-    //std::array<std::pair<int, bool>, 54> smet_street_vertical_park_map;
-    //std::array<std::pair<int, bool>, 54> smet_street_horizontal_park_map;
 };
