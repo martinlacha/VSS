@@ -112,7 +112,9 @@ namespace gui
             ImGui::Text("Probability parking vehicle:");
 
             if (ImGui::Button("Generate vehicles in park places")) {
-                //TODO vygenerovat parkoviště podle intenzity
+                config.running = false;
+                simulation.Restart();
+                simulation.Generate_Start_State();
             }
             ImGui::SameLine();
             if (ImGui::Button("Save") && !config.running) {

@@ -60,7 +60,7 @@ public:
     float prob_van = 0.15;
 
     // Probability of park
-    float percentage_of_occupied_parking_spots = 0.0;
+    float percentage_of_occupied_parking_spots = 1.0;
     float prob_park = 0.2;
     float prob_park_in_smet = 0.7;
     float prob_park_in_jung = 0.3;

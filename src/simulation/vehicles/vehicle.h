@@ -36,6 +36,7 @@ public:
             size_t phase_count, Map& map, Path::NVehicle_Path path_type, Path& path, Semaphore_Waiting_Place& places,
             Parking& parking_spot, size_t park_time, Parking::NParting_Place park_street);
     ~Vehicle() = default;
+    void Setup_Parked_Vehicle(Parking::NParting_Spot park_place, std::size_t drive_length);
     bool Move_Vehicle();
     [[nodiscard]] size_t Get_Vehicle_Length() const;
     [[nodiscard]] Cell Get_Head_Cell() const;
@@ -52,7 +53,6 @@ public:
     [[nodiscard]] bool Vehicle_Parked() const noexcept;
     [[nodiscard]] size_t Get_Attempt_To_Park() const noexcept;
     Vehicle& operator=(Vehicle other) {
-
         return *this;
     }
 

@@ -26,6 +26,25 @@ Vehicle::Vehicle(Vehicle::NVehicle_Type type, Cell start_cell, size_t path_lengt
     is_in_parking_zone = Will_Go_To_Park_Zone();
 }
 
+void Vehicle::Setup_Parked_Vehicle(Parking::NParting_Spot park_place, std::size_t drive_length) {
+    for (int i = 0; i <= vehicle_length - 1; i++) {
+        if (park_place == Parking::NParting_Spot::J_ROADSIDE_PARKING) {
+            cells.emplace_back(Cell(start_cell.Get_X() - i, start_cell.Get_Y()));
+        } else if (park_place == Parking::NParting_Spot::S_ROADSIDE_PARKING ||
+                   park_place == Parking::NParting_Spot::S_ANGLED_PARKING) {
+            cells.emplace_back(Cell(start_cell.Get_X(), start_cell.Get_Y() + i));
+        }
+    }
+    creating = false;
+    direction = park_place == Parking::NParting_Spot::J_ROADSIDE_PARKING ? NMove_Direction::UP : NMove_Direction::LEFT;
+    try_currently_park_in_street = want_park_in_street;
+    current_parking = park_place;
+    is_in_parking_zone = true;
+    length_to_drive = drive_length;
+    phase_path = path.Get_Phase_Count_By_Type(path_type) - phase_remain;
+    Try_To_Park();
+}
+
 ImVec4 Vehicle::Generate_Unique_Color() {
     srand( (unsigned)time( nullptr ) );
     float x = (float) rand()/RAND_MAX;

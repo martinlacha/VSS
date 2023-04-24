@@ -37,3 +37,24 @@ size_t Parking::Get_Iteration_For_Park(size_t min, size_t max) {
     size_t iterations = distribution_generator(gen);
     return iterations;
 }
+
+bool Parking::Create_Vehicle_On_Current_Spot(float probability) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distribution_generator(1, 100); // define the range
+
+    int r = distribution_generator(gen);
+    if (r <= (int)(probability * 100)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+std::pair<Cell, Cell> Parking::Get_Jung_Street_Edges() {
+    return { jung_first_parking_cell, jung_last_parking_cell };
+}
+
+std::pair<Cell, Cell> Parking::Get_Smet_Street_Edges() {
+    return { smet_first_parking_cell, smet_last_parking_cell };
+}

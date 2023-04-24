@@ -28,10 +28,20 @@ public:
     bool Is_In_End_First_Decision_Spot(Cell head);
     bool Is_In_Begin_Second_Decision_Spot(Cell head);
     bool Is_In_End_Second_Decision_Spot(Cell head);
+    bool Create_Vehicle_On_Current_Spot(float probability);
+
+    std::pair<Cell, Cell> Get_Jung_Street_Edges();
+    std::pair<Cell, Cell> Get_Smet_Street_Edges();
 
 private:
     Cell jung_begin_parking_cell = {33, 61};
     Cell jung_end_parking_cell = {8, 61};
     Cell smet_begin_parking_cell = {6, 58};
     Cell smet_end_parking_cell = {6, 4};
+
+    Cell jung_first_parking_cell = {33, 60};
+    Cell jung_last_parking_cell = {9, 60};
+
+    Cell smet_first_parking_cell = {6, 58};
+    Cell smet_last_parking_cell = {6, 5};
 };

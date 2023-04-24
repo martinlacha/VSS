@@ -20,6 +20,7 @@ public:
     void Update();
     Map& Get_Map();
     void Restart();
+    void Generate_Start_State();
 
     Simulation& operator=(const Simulation &rhs) {
         this->map = rhs.map;
@@ -71,10 +72,10 @@ private:
     void Update_Semaphores();
     void Update_Vehicles();
     void Try_Create_Car();
-private:
     [[nodiscard]] Vehicle Create_New_Vehicle(Path::NVehicle_Start_Position position);
     void Remove_Vehicles();
     bool clear_vehicles{};
     void Stats_Update_Vehicle(Vehicle &vehicle, bool add);
     void Update_Stats() noexcept;
+    [[nodiscard]] Vehicle Create_Parked_Vehicle(Parking::NParting_Place street, Cell head_cell, Parking::NParting_Spot park_place, int drive_length, bool van_allowed);
 };

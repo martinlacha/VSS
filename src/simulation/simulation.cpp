@@ -118,7 +118,9 @@ Vehicle Simulation::Create_New_Vehicle(Path::NVehicle_Start_Position position) {
 
 void Simulation::Remove_Vehicles() {
     int32_t index{};
+
     if (clear_vehicles) {
+        std::cout << "Before clear: " << vehicles.size() << std::endl;
         for (auto vehicle : vehicles) {
             // Insert int temp vector only cars which are not remove from map
             if (!vehicle.Remove_Vehicle()) {
@@ -133,6 +135,7 @@ void Simulation::Remove_Vehicles() {
         vehicles_temp.clear();
         clear_vehicles = false;
     }
+    std::cout << "After clear: " << vehicles.size() << std::endl;
 }
 
 // Update stats of vehicle counts
@@ -250,4 +253,58 @@ void Simulation::Restart() {
     map = Map();
     Reset_Config_Params();
     Reset_Stats_Params();
+}
+
+void Simulation::Generate_Start_State() {
+    //Jungmann street
+    std::pair<Cell, Cell> jung_edges = parking.Get_Jung_Street_Edges();
+    const int j_y = jung_edges.first.Get_Y();
+    int drive_length = 0;
+    for (int j_x = jung_edges.first.Get_X(); j_x > jung_edges.second.Get_X(); j_x--) {
+        if (map.Get_Cell_Type(j_x, j_y) == Map::NCell_Type::P_F &&
+            parking.Create_Vehicle_On_Current_Spot(config.percentage_of_occupied_parking_spots)) {
+            drive_length = j_x - jung_edges.second.Get_X() + 3;
+            Vehicle parked_vehicle = Create_Parked_Vehicle(Parking::NParting_Place::J_STREET, Cell(j_x, j_y + 1), Parking::NParting_Spot::J_ROADSIDE_PARKING, drive_length, true);
+            vehicles.push_back(parked_vehicle);
+        }
+    }
+
+    //Smet street
+    std::pair<Cell, Cell> smet_edges = parking.Get_Smet_Street_Edges();
+    const int s_x = smet_edges.first.Get_X();
+    for (int s_y = smet_edges.first.Get_Y(); s_y > smet_edges.second.Get_Y(); s_y--) {
+        if (map.Get_Cell_Type(s_x - 1, s_y) == Map::NCell_Type::P_F &&
+            parking.Create_Vehicle_On_Current_Spot(config.percentage_of_occupied_parking_spots)) {
+            drive_length = s_y - smet_edges.second.Get_Y() + 3;
+            Vehicle parked_vehicle = Create_Parked_Vehicle(Parking::NParting_Place::S_STREET, Cell(s_x, s_y), Parking::NParting_Spot::S_ANGLED_PARKING, drive_length, false);
+            vehicles.push_back(parked_vehicle);
+        }
+        if (map.Get_Cell_Type(s_x, s_y) == Map::NCell_Type::P_F &&
+            parking.Create_Vehicle_On_Current_Spot(config.percentage_of_occupied_parking_spots)) {
+            drive_length = s_x - smet_edges.second.Get_X() + 3;
+            Vehicle parked_vehicle = Create_Parked_Vehicle(Parking::NParting_Place::J_STREET, Cell(s_x, s_y), Parking::NParting_Spot::S_ROADSIDE_PARKING, drive_length, true);
+            vehicles.push_back(parked_vehicle);
+        }
+    }
+}
+
+Vehicle Simulation::Create_Parked_Vehicle(Parking::NParting_Place street, Cell head_cell, Parking::NParting_Spot park_place, int drive_length, bool van_allowed) {
+    Vehicle::NVehicle_Type vehicle_type = Vehicle::Get_Vehicle_Type(config.prob_motorbike, config.prob_car, config.prob_van);
+    while (!van_allowed && vehicle_type == Vehicle::NVehicle_Type::VAN) {
+        vehicle_type = Vehicle::Get_Vehicle_Type(config.prob_motorbike, config.prob_car, config.prob_van);
+    }
+    const bool wanna_park = true;
+    Path::NVehicle_Path path_type = Path::NVehicle_Path::RIGHT_PARK;
+    const Cell start_cell = head_cell;
+    const size_t iteration_for_park = parking.Get_Iteration_For_Park(config.min_iteration_for_park, config.max_iteration_for_park);
+    std::size_t phases_count = 0;
+    if (street == Parking::NParting_Place::J_STREET) {
+        phases_count = 1;
+    } else {
+        phases_count = 0;
+    }
+    Vehicle newVehicle = {vehicle_type, start_cell, 0, wanna_park, Path::NVehicle_Start_Position::RIGHT, phases_count,
+            map, path_type, path, waiting_places, parking, iteration_for_park, street};
+    newVehicle.Setup_Parked_Vehicle(park_place, drive_length);
+    return newVehicle;
 }
