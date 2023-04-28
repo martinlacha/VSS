@@ -147,11 +147,11 @@ namespace gui
 
             ImGui::Text("Minimum park time: ");
             ImGui::SameLine();
-            ImGui::SliderInt("            ", &(config.min_iteration_for_park), 10, 99);
+            ImGui::SliderInt("            ", &(config.min_iteration_for_park), 100, 499);
 
             ImGui::Text("Maximum park time: ");
             ImGui::SameLine();
-            ImGui::SliderInt("             ", &(config.max_iteration_for_park), 100, 1000);
+            ImGui::SliderInt("             ", &(config.max_iteration_for_park), 500, 1000);
 
         }
 
