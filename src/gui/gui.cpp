@@ -178,6 +178,7 @@ namespace gui
     static void drawStats()
     {
         if (ImGui::Begin("Stats")) {
+            ImGui::Text("Iteration %zu: ", config.iteration);
             ImGui::Text("Current amount of vehicles: ");
             ImGui::Text("Vans: %d", (std::uint32_t)config.van_count);
             ImGui::Text("Cars: %d", (std::uint32_t)config.car_count);
