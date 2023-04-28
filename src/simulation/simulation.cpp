@@ -148,39 +148,45 @@ void Simulation::Stats_Update_Vehicle(Vehicle &vehicle, bool add) {
         case Vehicle::NVehicle_Type::VAN:
             config.van_count = add ? (config.van_count + 1) : (config.van_count - 1);
             if (vehicle.Remove_Vehicle()) {
-                if (successfully_parked) {
-                    config.vans_parked++;
-                    config.vehicle_parked++;
-                    config.park_attempt_stats[vehicle.Get_Attempt_To_Park()];
-                } else if (cant_parked) {
-                    config.vans_not_parked++;
-                    config.vehicle_not_parked++;
+                if (vehicle.Want_Park()) {
+                    config.park_attempt_stats[vehicle.Get_Attempt_To_Park()]++;
+                    if (successfully_parked) {
+                        config.vans_parked++;
+                        config.vehicle_parked++;
+                    } else if (cant_parked) {
+                        config.vans_not_parked++;
+                        config.vehicle_not_parked++;
+                    }
                 }
             }
             return;
         case Vehicle::NVehicle_Type::CAR:
             config.car_count = add ? (config.car_count + 1) : config.car_count - 1;
             if (vehicle.Remove_Vehicle()) {
-                if (successfully_parked) {
-                    config.cars_parked++;
-                    config.vehicle_parked++;
-                    config.park_attempt_stats[vehicle.Get_Attempt_To_Park()];
-                } else if (cant_parked) {
-                    config.cars_not_parked++;
-                    config.vehicle_not_parked++;
+                config.park_attempt_stats[vehicle.Get_Attempt_To_Park()]++;
+                if (vehicle.Want_Park()) {
+                    if (successfully_parked) {
+                        config.cars_parked++;
+                        config.vehicle_parked++;
+                    } else if (cant_parked) {
+                        config.cars_not_parked++;
+                        config.vehicle_not_parked++;
+                    }
                 }
             }
             return;
         case Vehicle::NVehicle_Type::MOTORBIKE:
             config.motorbike_count = add ? (config.motorbike_count + 1) : (config.motorbike_count - 1);
             if (vehicle.Remove_Vehicle()) {
-                if (successfully_parked) {
-                    config.motorbike_parked++;
-                    config.vehicle_parked++;
-                    config.park_attempt_stats[vehicle.Get_Attempt_To_Park()];
-                } else if (cant_parked) {
-                    config.motorbike_not_parked++;
-                    config.vehicle_not_parked++;
+                if (vehicle.Want_Park()) {
+                    config.park_attempt_stats[vehicle.Get_Attempt_To_Park()]++;
+                    if (successfully_parked) {
+                        config.motorbike_parked++;
+                        config.vehicle_parked++;
+                    } else if (cant_parked) {
+                        config.motorbike_not_parked++;
+                        config.vehicle_not_parked++;
+                    }
                 }
             }
         return;
@@ -211,8 +217,8 @@ void Simulation::Reset_Config_Params() {
     config.prob_park = 0.2;
     config.prob_park_in_smet = 0.7;
     config.prob_park_in_jung = 0.3;
-    config.min_iteration_for_park = 100;
-    config.max_iteration_for_park = 1000;
+    config.min_iteration_for_park = 500;
+    config.max_iteration_for_park = 2000;
 }
 
 void Simulation::Reset_Stats_Params() {

@@ -64,6 +64,6 @@ public:
     float prob_park = 0.2;
     float prob_park_in_smet = 0.7;
     float prob_park_in_jung = 0.3;
-    int min_iteration_for_park = 100;
-    int max_iteration_for_park = 1000;
+    int min_iteration_for_park = 500;
+    int max_iteration_for_park = 2000;
 };
