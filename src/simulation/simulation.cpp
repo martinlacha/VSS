@@ -120,7 +120,7 @@ void Simulation::Remove_Vehicles() {
     int32_t index{};
 
     if (clear_vehicles) {
-        std::cout << "Before clear: " << vehicles.size() << std::endl;
+        //std::cout << "Before clear: " << vehicles.size() << std::endl;
         for (auto vehicle : vehicles) {
             // Insert int temp vector only cars which are not remove from map
             if (!vehicle.Remove_Vehicle()) {
@@ -135,7 +135,7 @@ void Simulation::Remove_Vehicles() {
         vehicles_temp.clear();
         clear_vehicles = false;
     }
-    std::cout << "After clear: " << vehicles.size() << std::endl;
+    //std::cout << "After clear: " << vehicles.size() << std::endl;
 }
 
 // Update stats of vehicle counts
