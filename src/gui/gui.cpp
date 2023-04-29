@@ -55,7 +55,7 @@ namespace gui
                 config.running = false;
             }
             ImGui::SameLine();
-            if (ImGui::Button("Stop"))
+            if (ImGui::Button("Stop & Reset"))
             {
                 config.running = false;
                 simulation.Restart();
@@ -63,7 +63,7 @@ namespace gui
 
             ImGui::NewLine();
 
-            ImGui::Text("Iteration time gap(ms): ");
+            ImGui::Text("Time gap between iterations (ms): ");
             ImGui::SameLine();
             ImGui::SliderInt(" ", &(config.pause_milliseconds_count), 10, 1000);
 
@@ -71,11 +71,26 @@ namespace gui
 
             // ---------------------------------------------------------------------------------------
 
-            ImGui::Text("Intensity of traffic per time:");
+            ImGui::Text("Semaphore duration time:");
+            ImGui::Text("Top: ");
             ImGui::SameLine();
-            ImGui::SliderFloat("              ", &(config.intensity_of_traffic), 0.0f, 1.0f);
+            if(ImGui::SliderInt("T", &(config.top_crossroad_duration_time), 5, 10)) {
+                simulation.Update_Top_Crossroad();
+            }
+            ImGui::Text("Bottom: ");
+            ImGui::SameLine();
+            if (ImGui::SliderInt("B", &(config.bottom_crossroad_duration_time), 5, 10)) {
+                simulation.Update_Bottom_Crossroad();
+            }
+            ImGui::Text("Right: ");
+            ImGui::SameLine();
+            if (ImGui::SliderInt("R", &(config.right_crossroad_duration_time), 5, 10)) {
+                simulation.Update_Right_Crossroad();
+            }
 
-            ImGui::Text("Probability vehicle direction:");
+            // ---------------------------------------------------------------------------------------
+
+            ImGui::Text("Traffic intensity:");
             ImGui::Text("Top: ");
             ImGui::SameLine();
             ImGui::SliderFloat("  ", &(config.prob_vehicle_create_top), 0.0f, 1.0f);
@@ -147,12 +162,16 @@ namespace gui
 
             ImGui::Text("Minimum park time: ");
             ImGui::SameLine();
-            ImGui::SliderInt("            ", &(config.min_iteration_for_park), 500, 999);
-
+            if (ImGui::SliderInt("            ", &(config.min_iteration_for_park), 100, 2000) &&
+                config.min_iteration_for_park > config.max_iteration_for_park) {
+                config.max_iteration_for_park = config.min_iteration_for_park + 1;
+            }
             ImGui::Text("Maximum park time: ");
             ImGui::SameLine();
-            ImGui::SliderInt("             ", &(config.max_iteration_for_park), 1000, 2000);
-
+            if (ImGui::SliderInt("             ", &(config.max_iteration_for_park), 100, 2000) &&
+                config.min_iteration_for_park > config.max_iteration_for_park) {
+                config.min_iteration_for_park = config.max_iteration_for_park - 1;
+            }
         }
 
         ImGui::End();
@@ -197,10 +216,6 @@ namespace gui
             ImGui::Text("4. attempt: %d", config.park_attempt_stats[3]);
             ImGui::Text("5. attempt: %d", config.park_attempt_stats[4]);
             ImGui::Text("6. attempt: %d", config.park_attempt_stats[5]);
-            ImGui::Text("7. attempt: %d", config.park_attempt_stats[6]);
-            ImGui::Text("8. attempt: %d", config.park_attempt_stats[7]);
-            ImGui::Text("9. attempt: %d", config.park_attempt_stats[8]);
-            ImGui::Text("10. attempt: %d", config.park_attempt_stats[9]);
 
             ImGui::Text("Vehicle type cant parked: %d", config.vehicle_not_parked);
             ImGui::Text("Vans: %d", config.vans_not_parked);

@@ -57,7 +57,7 @@ void Simulation::Try_Create_Car()
             Vehicle new_vehicle = Create_New_Vehicle(Path::NVehicle_Start_Position::TOP);
             remain_vehicle_length_top = new_vehicle.Get_Vehicle_Length();
             vehicles.push_back(new_vehicle);
-            Stats_Update_Vehicle(new_vehicle, true);
+            Stats_Update_Vehicle(new_vehicle, config.ADD_VEHICLE);
         }
     } else {
         if (remain_vehicle_length_top) {
@@ -75,7 +75,7 @@ void Simulation::Try_Create_Car()
             Vehicle new_vehicle = Create_New_Vehicle(Path::NVehicle_Start_Position::BOTTOM);
             remain_vehicle_length_bottom = new_vehicle.Get_Vehicle_Length();
             vehicles.push_back(new_vehicle);
-            Stats_Update_Vehicle(new_vehicle, true);
+            Stats_Update_Vehicle(new_vehicle, config.ADD_VEHICLE);
         }
     } else {
         if (remain_vehicle_length_bottom) {
@@ -93,7 +93,7 @@ void Simulation::Try_Create_Car()
             Vehicle new_vehicle = Create_New_Vehicle(Path::NVehicle_Start_Position::RIGHT);
             remain_vehicle_length_right = new_vehicle.Get_Vehicle_Length();
             vehicles.push_back(new_vehicle);
-            Stats_Update_Vehicle(new_vehicle, true);
+            Stats_Update_Vehicle(new_vehicle, config.ADD_VEHICLE);
         }
     } else {
         if (remain_vehicle_length_right) {
@@ -127,7 +127,7 @@ void Simulation::Remove_Vehicles() {
                 vehicles_temp.insert(vehicles_temp.begin() + index, Vehicle(vehicle));
                 index++;
             } else {
-                Stats_Update_Vehicle(vehicle, false);
+                Stats_Update_Vehicle(vehicle, config.REMOVE_VEHICLE);
             }
         }
         vehicles.clear();
@@ -161,7 +161,7 @@ void Simulation::Stats_Update_Vehicle(Vehicle &vehicle, bool add) {
             }
             return;
         case Vehicle::NVehicle_Type::CAR:
-            config.car_count = add ? (config.car_count + 1) : config.car_count - 1;
+            config.car_count = add ? (config.car_count + 1) : (config.car_count - 1);
             if (vehicle.Remove_Vehicle()) {
                 config.park_attempt_stats[vehicle.Get_Attempt_To_Park()]++;
                 if (vehicle.Want_Park()) {
@@ -198,11 +198,11 @@ void Simulation::Reset_Config_Params() {
     config.park_places_saved = false;
 
     config.top_crossroad_duration_time = 5;
-    config.top_crossroad_pause_time = 3;
+    config.top_crossroad_pause_time = 4;
     config.bottom_crossroad_duration_time = 5;
-    config.bottom_crossroad_pause_time = 3;
+    config.bottom_crossroad_pause_time = 4;
     config.right_crossroad_duration_time = 5;
-    config.right_crossroad_pause_time = 3;
+    config.right_crossroad_pause_time = 4;
 
     config.pause_milliseconds_count = 100;
 
@@ -232,8 +232,7 @@ void Simulation::Reset_Stats_Params() {
     config.amount_of_cars.clear();
     config.amount_of_motorbikes.clear();
 
-    config.park_attempt_stats = {0,0,0,0,0,
-                                 0,0,0,0,0};
+    config.park_attempt_stats = {0,0,0,0,0,0};
     config.vehicle_parked = 0;
     config.vans_parked = 0;
     config.cars_parked = 0;
@@ -243,6 +242,10 @@ void Simulation::Reset_Stats_Params() {
     config.vans_not_parked = 0;
     config.cars_not_parked = 0;
     config.motorbike_not_parked = 0;
+
+    config.top_crossroad_duration_time = 5;
+    config.bottom_crossroad_duration_time = 5;
+    config.right_crossroad_duration_time = 5;
 
     vehicles.clear();
 }
@@ -273,6 +276,7 @@ void Simulation::Generate_Start_State() {
             drive_length = j_x - jung_edges.second.Get_X() + 3;
             Vehicle parked_vehicle = Create_Parked_Vehicle(Parking::NParting_Place::J_STREET, Cell(j_x, j_y + 1), Parking::NParting_Spot::J_ROADSIDE_PARKING, drive_length, true);
             vehicles.push_back(parked_vehicle);
+            Stats_Update_Vehicle(parked_vehicle, config.ADD_VEHICLE);
         }
     }
 
@@ -286,6 +290,7 @@ void Simulation::Generate_Start_State() {
             drive_length = s_y - smet_edges.second.Get_Y() + 2;
             Vehicle parked_vehicle = Create_Parked_Vehicle(Parking::NParting_Place::S_STREET, Cell(s_x, s_y), Parking::NParting_Spot::S_ANGLED_PARKING, drive_length, false);
             vehicles.push_back(parked_vehicle);
+            Stats_Update_Vehicle(parked_vehicle, config.ADD_VEHICLE);
         }
     }
 
@@ -296,6 +301,7 @@ void Simulation::Generate_Start_State() {
             drive_length = s_y - smet_edges.second.Get_Y() + 2;
             Vehicle parked_vehicle = Create_Parked_Vehicle(Parking::NParting_Place::S_STREET, Cell(s_x, s_y), Parking::NParting_Spot::S_ROADSIDE_PARKING, drive_length, true);
             vehicles.push_back(parked_vehicle);
+            Stats_Update_Vehicle(parked_vehicle, config.ADD_VEHICLE);
         }
     }
 }
@@ -319,4 +325,16 @@ Vehicle Simulation::Create_Parked_Vehicle(Parking::NParting_Place street, Cell h
             map, path_type, path, waiting_places, parking, iteration_for_park, street};
     newVehicle.Setup_Parked_Vehicle(park_place, drive_length);
     return newVehicle;
+}
+
+void Simulation::Update_Top_Crossroad() noexcept {
+    top_crossroad.Change_Iteration_To_Switch(config.top_crossroad_duration_time);
+}
+
+void Simulation::Update_Bottom_Crossroad() noexcept {
+    bottom_crossroad.Change_Iteration_To_Switch(config.bottom_crossroad_duration_time);
+}
+
+void Simulation::Update_Right_Crossroad() noexcept {
+    right_crossroad.Change_Iteration_To_Switch(config.right_crossroad_duration_time);
 }

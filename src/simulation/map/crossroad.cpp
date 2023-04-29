@@ -50,3 +50,7 @@ void Crossroad::Update() {
     }
     next_switch--;
 }
+
+void Crossroad::Change_Iteration_To_Switch(const size_t new_count) noexcept {
+    count_iteration_to_switch = new_count;
+}

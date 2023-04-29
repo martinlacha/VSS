@@ -12,6 +12,9 @@ public:
     bool running = false;
     bool park_places_saved = false;
 
+    bool ADD_VEHICLE = true;
+    bool REMOVE_VEHICLE = false;
+
     // Statistics
     size_t iteration{};
     size_t van_count{};
@@ -23,8 +26,7 @@ public:
     std::vector<std::uint32_t> amount_of_cars{0};
     std::vector<std::uint32_t> amount_of_motorbikes{0};
 
-    std::array<int, 10> park_attempt_stats{0,0,0,0,0,
-                                           0,0,0,0,0,};
+    std::array<int, 6> park_attempt_stats{0,0,0,0,0, 0};
     int vehicle_parked{};
     int vans_parked{};
     int cars_parked{};
@@ -36,14 +38,14 @@ public:
     int motorbike_not_parked{};
 
     // Configuration of crossroads and semaphores
-    size_t top_crossroad_duration_time = 5;
-    size_t top_crossroad_pause_time = 3;
-    size_t bottom_crossroad_duration_time = 5;
-    size_t bottom_crossroad_pause_time = 3;
-    size_t right_crossroad_duration_time = 5;
-    size_t right_crossroad_pause_time = 3;
+    int top_crossroad_duration_time = 5;
+    int top_crossroad_pause_time = 4;
+    int bottom_crossroad_duration_time = 5;
+    int bottom_crossroad_pause_time = 4;
+    int right_crossroad_duration_time = 5;
+    int right_crossroad_pause_time = 4;
 
-    // Time of break between iteration
+    // Time gap between iterations
     int pause_milliseconds_count = 100;
 
     // Intensity of amount of vehicles per time
@@ -64,6 +66,7 @@ public:
     float prob_park = 0.2;
     float prob_park_in_smet = 0.7;
     float prob_park_in_jung = 0.3;
+
     int min_iteration_for_park = 500;
     int max_iteration_for_park = 2000;
 };

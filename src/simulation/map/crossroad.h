@@ -16,6 +16,7 @@ public:
               size_t count_iterations, size_t pause_count, Map& map);
     Crossroad() = default;
     void Update();
+    void Change_Iteration_To_Switch(const size_t new_count) noexcept;
 private:
     Map& map;
     size_t count_iteration_to_switch;

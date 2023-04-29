@@ -21,6 +21,9 @@ public:
     Map& Get_Map();
     void Restart();
     void Generate_Start_State();
+    void Update_Top_Crossroad() noexcept;
+    void Update_Bottom_Crossroad() noexcept;
+    void Update_Right_Crossroad() noexcept;
 
     Simulation& operator=(const Simulation &rhs) {
         this->map = rhs.map;
