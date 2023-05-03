@@ -11,10 +11,9 @@ Projekt je napsaný v jazyce C++ a pro úspěšné sestavení projektu je potře
 
 Sestavení projektu se provede v kořenovém adresáři následujícím příkazem:
 
-`cmake -S . -B build/release -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release`
-
-`cmake -S . -B build`
-
+```
+cmake -S . -B build/release -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+```
 
 ### Závislosti
 
@@ -44,11 +43,11 @@ mingw32-make -C build\release
 Linux:
 
 ```
-./build/release/src/covid19_sim
+./build/release/src/simulation
 ```
 
 Windows:
 
 ```
-build\release\src\covid19_sim.exe
+build\release\src\simulation.exe
 ```
