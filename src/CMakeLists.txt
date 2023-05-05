@@ -59,3 +59,8 @@ else()
         libglew_static
     )
 endif()
+
+add_custom_command(
+        TARGET simulation POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/imgui.ini $<TARGET_FILE_DIR:simulation>
+)
