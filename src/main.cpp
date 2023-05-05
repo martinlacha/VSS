@@ -11,7 +11,7 @@
 
 #include "gui/gui.h"
 
-static constexpr const char* Window_Title = "<window title>";
+static constexpr const char* Window_Title = "Simulation";
 //static constexpr uint32_t Window_Width = 1240;
 static constexpr uint32_t Window_Width = 1920;
 //static constexpr uint32_t Window_Height = 720;
