@@ -139,7 +139,9 @@ namespace gui
                 saved_config = config;
             }
             ImGui::SameLine();
-            if (ImGui::Button("Load") && config.park_places_saved && !config.running) {
+            if (ImGui::Button("Load") && config.park_places_saved) {
+                config.running = false;
+                saved_config.running = false;
                 simulation = saved_simulation;
                 config = saved_config;
             }
