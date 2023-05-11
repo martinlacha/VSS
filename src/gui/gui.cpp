@@ -6,6 +6,7 @@
 namespace gui
 {
     Configuration config;
+    Configuration saved_config;
     Simulation simulation(config);
     Simulation saved_simulation(config);
 
@@ -135,10 +136,12 @@ namespace gui
             if (ImGui::Button("Save") && !config.running) {
                 config.park_places_saved = true;
                 saved_simulation = simulation;
+                saved_config = config;
             }
             ImGui::SameLine();
             if (ImGui::Button("Load") && config.park_places_saved && !config.running) {
                 simulation = saved_simulation;
+                config = saved_config;
             }
             ImGui::Text("Percentage of occupied parking spots: ");
             ImGui::SameLine();
